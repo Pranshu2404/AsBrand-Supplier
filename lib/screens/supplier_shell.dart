@@ -187,39 +187,33 @@ class _SupplierShellState extends State<SupplierShell>
 
   Widget _buildBottomNav() {
     return Container(
-      decoration: BoxDecoration(
-        color: Colors.white,
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.08),
-            blurRadius: 20,
-            offset: const Offset(0, -4),
-          ),
-        ],
+      decoration: const BoxDecoration(
+        color: AppTheme.cardBackground,
+        border: Border(top: BorderSide(color: Color(0xFF27272A), width: 1)),
       ),
       child: SafeArea(
         child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
               _buildNavItem(
                 index: 0,
-                icon: Iconsax.home,
-                activeIcon: Iconsax.home,
+                icon: Iconsax.home_2,
+                activeIcon: Iconsax.home_2_copy,
                 label: 'Dashboard',
               ),
               _buildNavItem(
                 index: 1,
-                icon: Iconsax.shopping_bag,
-                activeIcon: Iconsax.shopping_bag,
-                label: 'New Orders',
+                icon: Iconsax.box,
+                activeIcon: Iconsax.box_copy,
+                label: 'Orders',
                 badge: _newOrdersBadge,
               ),
               _buildNavItem(
                 index: 2,
                 icon: Iconsax.user,
-                activeIcon: Iconsax.user,
+                activeIcon: Iconsax.user_copy,
                 label: 'Profile',
               ),
             ],
@@ -239,19 +233,19 @@ class _SupplierShellState extends State<SupplierShell>
     final isActive = _currentIndex == index;
     return GestureDetector(
       onTap: () {
-        HapticFeedback.lightImpact();
+        HapticFeedback.selectionClick();
         setState(() => _currentIndex = index);
       },
       behavior: HitTestBehavior.opaque,
       child: AnimatedContainer(
-        duration: const Duration(milliseconds: 250),
-        curve: Curves.easeInOut,
-        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
+        duration: const Duration(milliseconds: 200),
+        curve: Curves.easeOutCubic,
+        padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 8),
         decoration: BoxDecoration(
           color: isActive
-              ? AppTheme.primaryColor.withOpacity(0.08)
+              ? AppTheme.primaryColor.withOpacity(0.15)
               : Colors.transparent,
-          borderRadius: BorderRadius.circular(16),
+          borderRadius: BorderRadius.circular(12),
         ),
         child: Column(
           mainAxisSize: MainAxisSize.min,
@@ -261,26 +255,27 @@ class _SupplierShellState extends State<SupplierShell>
               children: [
                 Icon(
                   isActive ? activeIcon : icon,
-                  color: isActive ? AppTheme.primaryColor : const Color(0xFFB0B0BF),
+                  color: isActive ? AppTheme.primaryAccent : AppTheme.textSecondary,
                   size: 24,
                 ),
                 if (badge > 0)
                   Positioned(
-                    top: -4,
-                    right: -6,
+                    top: -5,
+                    right: -8,
                     child: Container(
-                      padding: const EdgeInsets.all(3),
-                      decoration: const BoxDecoration(
-                        color: Color(0xFFEF4444),
+                      padding: const EdgeInsets.all(4),
+                      decoration: BoxDecoration(
+                        color: AppTheme.errorColor, // Zepto style urgent red badge
                         shape: BoxShape.circle,
+                        border: Border.all(color: AppTheme.cardBackground, width: 2),
                       ),
-                      constraints: const BoxConstraints(minWidth: 16, minHeight: 16),
+                      constraints: const BoxConstraints(minWidth: 20, minHeight: 20),
                       child: Text(
                         badge > 99 ? '99+' : '$badge',
                         style: const TextStyle(
                           color: Colors.white,
-                          fontSize: 9,
-                          fontWeight: FontWeight.bold,
+                          fontSize: 10,
+                          fontWeight: FontWeight.w800,
                         ),
                         textAlign: TextAlign.center,
                       ),
@@ -288,13 +283,13 @@ class _SupplierShellState extends State<SupplierShell>
                   ),
               ],
             ),
-            const SizedBox(height: 4),
+            const SizedBox(height: 6),
             AnimatedDefaultTextStyle(
-              duration: const Duration(milliseconds: 250),
+              duration: const Duration(milliseconds: 200),
               style: TextStyle(
-                fontSize: 11,
-                fontWeight: isActive ? FontWeight.w700 : FontWeight.w500,
-                color: isActive ? AppTheme.primaryColor : const Color(0xFFB0B0BF),
+                fontSize: 12,
+                fontWeight: isActive ? FontWeight.w700 : FontWeight.w600,
+                color: isActive ? AppTheme.primaryAccent : AppTheme.textSecondary,
               ),
               child: Text(label),
             ),
