@@ -14,8 +14,9 @@ class SupplierProvider with ChangeNotifier {
 
   // Dashboard stats
   Map<String, dynamic>? _dashboardStats;
+  Map<String, dynamic>? _financeData;
 
-  // Supplier products
+  // Real-time Order States
   List<Product> _products = [];
 
   // Supplier orders
@@ -29,6 +30,7 @@ class SupplierProvider with ChangeNotifier {
   bool get isLoading => _isLoading;
   String? get error => _error;
   Map<String, dynamic>? get dashboardStats => _dashboardStats;
+  Map<String, dynamic>? get financeData => _financeData;
   List<Product> get products => _products;
   List<Order> get orders => _orders;
   List<Order> get pendingNewOrders => _pendingNewOrders;
@@ -237,6 +239,25 @@ class SupplierProvider with ChangeNotifier {
 
     try {
       _products = await _apiService.getSupplierProducts();
+      _isLoading = false;
+      _error = null;
+      notifyListeners();
+    } catch (e) {
+      _isLoading = false;
+      _error = e.toString();
+      notifyListeners();
+    }
+  }
+
+  Future<void> fetchFinanceDetails() async {
+    _isLoading = true;
+    notifyListeners();
+
+    try {
+      final response = await _apiService.getSupplierFinance();
+      if (response['success'] == true) {
+        _financeData = response['data'];
+      }
       _isLoading = false;
       _error = null;
       notifyListeners();
