@@ -1,0 +1,43 @@
+name: asbrand_supplier
+description: "AsBrand Supplier App - Manage your store, products, and orders."
+publish_to: 'none'
+
+version: 1.0.0+1
+
+environment:
+  sdk: ">=3.10.0 <4.0.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+  # UI
+  cupertino_icons: ^1.0.8
+  iconsax_flutter: ^1.0.1
+  google_fonts: ^8.0.2
+
+  # State Management
+  provider: ^6.1.1
+
+  # Networking
+  http: ^1.6.0
+
+  # Storage
+  flutter_secure_storage: ^9.0.0
+  shared_preferences: ^2.2.2
+  path_provider: ^2.1.1
+
+  # Media
+  image_picker: ^1.0.7
+
+  # Utils
+  intl: ^0.19.0
+  url_launcher: ^6.2.5
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^6.0.0
+
+flutter:
+  uses-material-design: true
