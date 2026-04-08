@@ -36,7 +36,7 @@ class AsBrandSupplierApp extends StatelessWidget {
       child: MaterialApp(
         title: 'AsBrand Supplier',
         debugShowCheckedModeBanner: false,
-        theme: AppTheme.lightTheme,
+        theme: AppTheme.darkTheme,
         home: const _AppRoot(),
       ),
     );
