@@ -50,9 +50,6 @@ class _SupplierShellState extends State<SupplierShell>
       vsync: this,
       duration: const Duration(milliseconds: 500),
     );
-    _popupSlide = Tween<double>(begin: -1.0, end: 0.0).animate(
-      CurvedAnimation(parent: _popupController, curve: Curves.easeOutBack),
-    );
     _popupFade = CurvedAnimation(parent: _popupController, curve: Curves.easeIn);
 
     // Connect socket for real-time new order notifications
