@@ -21,7 +21,7 @@ class SupplierOrderHistoryDetailScreen extends StatelessWidget {
     final supplierItems = order.items.where((i) => i.supplierId == authProvider.user?.id).toList();
 
     return Scaffold(
-      backgroundColor: AppTheme.background,
+      backgroundColor: AppTheme.scaffoldBackground,
       appBar: AppBar(
         title: Text('Order #$orderId', style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
         backgroundColor: Colors.white,
@@ -45,7 +45,7 @@ class SupplierOrderHistoryDetailScreen extends StatelessWidget {
                   ),
                   const SizedBox(height: 6),
                   Text(
-                    DateFormat('dd MMM yyyy, hh:mm a').format(order.createdAt),
+                    DateFormat('dd MMM yyyy, hh:mm a').format(order.orderDate),
                     style: TextStyle(color: Colors.white.withOpacity(0.8), fontSize: 13),
                   ),
                 ],
@@ -129,7 +129,7 @@ class SupplierOrderHistoryDetailScreen extends StatelessWidget {
                           children: [
                             const Icon(Icons.person_outline, size: 18, color: Colors.grey),
                             const SizedBox(width: 8),
-                            Text(order.shippingAddress?.name ?? 'Unknown', style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 14)),
+                            Text(order.customerName ?? 'Unknown', style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 14)),
                           ],
                         ),
                         const SizedBox(height: 12),
@@ -148,7 +148,7 @@ class SupplierOrderHistoryDetailScreen extends StatelessWidget {
                             const SizedBox(width: 8),
                             Expanded(
                               child: Text(
-                                '${order.shippingAddress?.street ?? ''}, ${order.shippingAddress?.city ?? ''}, ${order.shippingAddress?.state ?? ''} ${order.shippingAddress?.zipCode ?? ''}'.trim(),
+                                '${order.shippingAddress?.street ?? ''}, ${order.shippingAddress?.city ?? ''}, ${order.shippingAddress?.state ?? ''} ${order.shippingAddress?.postalCode ?? ''}'.trim(),
                                 style: const TextStyle(fontSize: 13, height: 1.4),
                               ),
                             ),
@@ -189,13 +189,13 @@ class SupplierOrderHistoryDetailScreen extends StatelessWidget {
         children: [
           _buildTimelineItem(
             title: 'Order Placed',
-            time: order.createdAt,
+            time: order.orderDate,
             isCompleted: true,
             isFirst: true,
           ),
           _buildTimelineItem(
             title: 'Order Accepted',
-            time: order.supplierAcceptedAt ?? order.createdAt,
+            time: order.supplierAcceptedAt ?? order.orderDate,
             isCompleted: order.supplierAcceptedAt != null,
           ),
           _buildTimelineItem(
