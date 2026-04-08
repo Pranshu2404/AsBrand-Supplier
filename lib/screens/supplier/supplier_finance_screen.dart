@@ -26,7 +26,7 @@ class _SupplierFinanceScreenState extends State<SupplierFinanceScreen> {
     final provider = context.watch<SupplierProvider>();
 
     return Scaffold(
-      backgroundColor: AppTheme.background,
+      backgroundColor: AppTheme.scaffoldBackground,
       appBar: AppBar(
         title: const Text('Payouts & Finance', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18, color: AppTheme.textPrimary)),
         backgroundColor: Colors.white,
