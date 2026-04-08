@@ -68,9 +68,9 @@ class _SupplierNewOrdersScreenState
     }).toList();
 
     return Scaffold(
-      backgroundColor: const Color(0xFFF4F5F9),
+      backgroundColor: AppTheme.scaffoldBackground,
       appBar: AppBar(
-        backgroundColor: Colors.white,
+        backgroundColor: AppTheme.scaffoldBackground,
         surfaceTintColor: Colors.transparent,
         elevation: 0,
         title: Column(
@@ -86,7 +86,7 @@ class _SupplierNewOrdersScreenState
             if (!supplier.isLoading && allOrders.isNotEmpty)
               Text(
                 '${allOrders.length} total',
-                style: TextStyle(fontSize: 11, color: Colors.grey.shade500),
+                style: const TextStyle(fontSize: 11, color: AppTheme.textSecondary),
               ),
           ],
         ),
@@ -107,12 +107,13 @@ class _SupplierNewOrdersScreenState
           // Orders list
           Expanded(
             child: supplier.isLoading
-                ? const Center(child: CircularProgressIndicator())
+                ? const Center(child: CircularProgressIndicator(color: AppTheme.primaryAccent))
                 : filtered.isEmpty
                     ? _buildEmpty()
                     : RefreshIndicator(
                         onRefresh: () => supplier.fetchOrders(),
-                        color: AppTheme.primaryColor,
+                        color: AppTheme.primaryAccent,
+                        backgroundColor: AppTheme.surfaceColor,
                         child: CustomScrollView(
                           slivers: [
                             // Today's orders section
@@ -121,7 +122,7 @@ class _SupplierNewOrdersScreenState
                                 child: _buildSectionHeader(
                                   'Today',
                                   '${todayOrders.length} order${todayOrders.length > 1 ? 's' : ''}',
-                                  const Color(0xFF10B981),
+                                  AppTheme.successGreen,
                                 ),
                               ),
                               SliverList(
@@ -141,7 +142,7 @@ class _SupplierNewOrdersScreenState
                                 child: _buildSectionHeader(
                                   'Previous',
                                   '${previousOrders.length} order${previousOrders.length > 1 ? 's' : ''}',
-                                  Colors.grey.shade500,
+                                  AppTheme.textSecondary,
                                 ),
                               ),
                               SliverList(
@@ -167,7 +168,7 @@ class _SupplierNewOrdersScreenState
 
   Widget _buildFilterChips() {
     return Container(
-      color: Colors.white,
+      color: AppTheme.scaffoldBackground,
       height: 52,
       child: ListView.separated(
         scrollDirection: Axis.horizontal,
@@ -186,15 +187,18 @@ class _SupplierNewOrdersScreenState
               duration: const Duration(milliseconds: 200),
               padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 5),
               decoration: BoxDecoration(
-                color: isActive ? AppTheme.primaryColor : Colors.grey.shade100,
+                color: isActive ? AppTheme.primaryAccent : AppTheme.surfaceColor,
                 borderRadius: BorderRadius.circular(20),
+                border: Border.all(
+                  color: isActive ? AppTheme.primaryAccent : const Color(0xFF27272A),
+                ),
               ),
               child: Text(
                 s == 'All' ? 'All' : _capitalize(s),
                 style: TextStyle(
                   fontSize: 12,
                   fontWeight: FontWeight.w600,
-                  color: isActive ? Colors.white : Colors.grey.shade600,
+                  color: isActive ? Colors.white : AppTheme.textSecondary,
                 ),
               ),
             ),
@@ -257,14 +261,14 @@ class _SupplierNewOrdersScreenState
             Container(
               width: 90,
               height: 90,
-              decoration: BoxDecoration(
-                color: Colors.grey.shade100,
+              decoration: const BoxDecoration(
+                color: AppTheme.surfaceColor,
                 shape: BoxShape.circle,
               ),
-              child: Icon(
+              child: const Icon(
                 Iconsax.shopping_bag,
                 size: 46,
-                color: Colors.grey.shade300,
+                color: AppTheme.textHint,
               ),
             ),
             const SizedBox(height: 20),
@@ -282,7 +286,7 @@ class _SupplierNewOrdersScreenState
                   ? 'Orders from customers will appear here'
                   : 'No $_statusFilter orders found',
               textAlign: TextAlign.center,
-              style: TextStyle(fontSize: 14, color: Colors.grey.shade500),
+              style: const TextStyle(fontSize: 14, color: AppTheme.textSecondary),
             ),
           ],
         ),
@@ -317,15 +321,9 @@ class _OrderCard extends StatelessWidget {
       child: Container(
         margin: const EdgeInsets.fromLTRB(16, 0, 16, 10),
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: AppTheme.cardBackground,
           borderRadius: BorderRadius.circular(18),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withOpacity(0.04),
-              blurRadius: 12,
-              offset: const Offset(0, 4),
-            ),
-          ],
+          border: Border.all(color: const Color(0xFF27272A)),
         ),
         child: Column(
           children: [
@@ -367,9 +365,9 @@ class _OrderCard extends StatelessWidget {
                         const SizedBox(height: 3),
                         Text(
                           timeLabel,
-                          style: TextStyle(
+                          style: const TextStyle(
                             fontSize: 11,
-                            color: Colors.grey.shade500,
+                            color: AppTheme.textSecondary,
                           ),
                         ),
                       ],
@@ -398,7 +396,7 @@ class _OrderCard extends StatelessWidget {
             ),
 
             // Divider
-            Divider(height: 1, color: Colors.grey.shade100),
+            const Divider(height: 1, color: Color(0xFF27272A)),
 
             // Items preview
             Padding(
@@ -413,7 +411,7 @@ class _OrderCard extends StatelessWidget {
                               width: 42,
                               height: 42,
                               decoration: BoxDecoration(
-                                color: Colors.grey.shade100,
+                                color: AppTheme.surfaceColor,
                                 borderRadius: BorderRadius.circular(10),
                                 image: item.productImage.isNotEmpty
                                     ? DecorationImage(
@@ -424,8 +422,8 @@ class _OrderCard extends StatelessWidget {
                                     : null,
                               ),
                               child: item.productImage.isEmpty
-                                  ? Icon(Icons.inventory_2_outlined,
-                                      color: Colors.grey.shade400, size: 20)
+                                  ? const Icon(Icons.inventory_2_outlined,
+                                      color: AppTheme.textHint, size: 20)
                                   : null,
                             ),
                             const SizedBox(width: 10),
@@ -446,9 +444,9 @@ class _OrderCard extends StatelessWidget {
                                   if (item.variant != null)
                                     Text(
                                       item.variant!,
-                                      style: TextStyle(
+                                      style: const TextStyle(
                                         fontSize: 11,
-                                        color: Colors.grey.shade500,
+                                        color: AppTheme.textSecondary,
                                       ),
                                     ),
                                 ],
@@ -456,9 +454,9 @@ class _OrderCard extends StatelessWidget {
                             ),
                             Text(
                               'x${item.quantity}',
-                              style: TextStyle(
+                              style: const TextStyle(
                                 fontSize: 12,
-                                color: Colors.grey.shade500,
+                                color: AppTheme.textSecondary,
                               ),
                             ),
                             const SizedBox(width: 8),
@@ -479,9 +477,9 @@ class _OrderCard extends StatelessWidget {
                       alignment: Alignment.centerLeft,
                       child: Text(
                         '+${order.items.length - 2} more items',
-                        style: TextStyle(
+                        style: const TextStyle(
                           fontSize: 12,
-                          color: Colors.grey.shade500,
+                          color: AppTheme.textSecondary,
                         ),
                       ),
                     ),
@@ -492,10 +490,10 @@ class _OrderCard extends StatelessWidget {
             // Footer with total + tap hint
             Container(
               padding: const EdgeInsets.fromLTRB(16, 10, 16, 14),
-              decoration: BoxDecoration(
-                color: Colors.grey.shade50,
+              decoration: const BoxDecoration(
+                color: AppTheme.surfaceColor,
                 borderRadius:
-                    const BorderRadius.vertical(bottom: Radius.circular(18)),
+                    BorderRadius.vertical(bottom: Radius.circular(18)),
               ),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -508,14 +506,14 @@ class _OrderCard extends StatelessWidget {
                               ? Icons.money_outlined
                               : Icons.credit_card_outlined,
                           size: 14,
-                          color: Colors.grey.shade500,
+                          color: AppTheme.textSecondary,
                         ),
                         const SizedBox(width: 4),
                         Text(
                           order.paymentMethod!.toUpperCase(),
-                          style: TextStyle(
+                          style: const TextStyle(
                             fontSize: 11,
-                            color: Colors.grey.shade500,
+                            color: AppTheme.textSecondary,
                           ),
                         ),
                       ],
@@ -532,10 +530,10 @@ class _OrderCard extends StatelessWidget {
                         ),
                       ),
                       const SizedBox(width: 6),
-                      Icon(
+                      const Icon(
                         Icons.chevron_right,
                         size: 18,
-                        color: Colors.grey.shade400,
+                        color: AppTheme.textHint,
                       ),
                     ],
                   ),
@@ -599,7 +597,7 @@ class _OrderDetailSheet extends StatelessWidget {
       builder: (context, scrollController) {
         return Container(
           decoration: const BoxDecoration(
-            color: Color(0xFFF4F5F9),
+            color: AppTheme.scaffoldBackground,
             borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
           ),
           child: Column(
@@ -611,7 +609,7 @@ class _OrderDetailSheet extends StatelessWidget {
                   width: 40,
                   height: 4,
                   decoration: BoxDecoration(
-                    color: Colors.grey.shade300,
+                    color: AppTheme.textHint,
                     borderRadius: BorderRadius.circular(2),
                   ),
                 ),
@@ -899,15 +897,9 @@ class _OrderDetailSheet extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: AppTheme.cardBackground,
         borderRadius: BorderRadius.circular(18),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.04),
-            blurRadius: 10,
-            offset: const Offset(0, 4),
-          ),
-        ],
+        border: Border.all(color: const Color(0xFF27272A)),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -942,7 +934,7 @@ class _OrderDetailSheet extends StatelessWidget {
             width: 48,
             height: 48,
             decoration: BoxDecoration(
-              color: Colors.grey.shade100,
+              color: AppTheme.surfaceColor,
               borderRadius: BorderRadius.circular(10),
               image: item.productImage.isNotEmpty
                   ? DecorationImage(
@@ -952,8 +944,8 @@ class _OrderDetailSheet extends StatelessWidget {
                   : null,
             ),
             child: item.productImage.isEmpty
-                ? Icon(Icons.inventory_2_outlined,
-                    color: Colors.grey.shade400, size: 22)
+                ? const Icon(Icons.inventory_2_outlined,
+                    color: AppTheme.textHint, size: 22)
                 : null,
           ),
           const SizedBox(width: 12),
@@ -972,9 +964,9 @@ class _OrderDetailSheet extends StatelessWidget {
                 if (item.variant != null)
                   Text(
                     item.variant!,
-                    style: TextStyle(
+                    style: const TextStyle(
                       fontSize: 11,
-                      color: Colors.grey.shade500,
+                      color: AppTheme.textSecondary,
                     ),
                   ),
               ],
@@ -993,7 +985,7 @@ class _OrderDetailSheet extends StatelessWidget {
               ),
               Text(
                 'Qty: ${item.quantity}',
-                style: TextStyle(fontSize: 11, color: Colors.grey.shade500),
+                style: const TextStyle(fontSize: 11, color: AppTheme.textSecondary),
               ),
             ],
           ),
@@ -1018,7 +1010,7 @@ class _OrderDetailSheet extends StatelessWidget {
             style: TextStyle(
               fontSize: isBold ? 14 : 13,
               fontWeight: isBold ? FontWeight.w700 : FontWeight.w500,
-              color: isBold ? AppTheme.textPrimary : Colors.grey.shade600,
+              color: isBold ? AppTheme.textPrimary : AppTheme.textSecondary,
             ),
           ),
           Text(
