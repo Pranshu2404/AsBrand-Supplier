@@ -79,6 +79,7 @@ class _EditSupplierProductScreenState extends State<EditSupplierProductScreen> {
   final _descController = TextEditingController();
   final _priceController = TextEditingController();
   final _offerPriceController = TextEditingController();
+  final _packagingChargeController = TextEditingController();
   final _quantityController = TextEditingController();
 
   // Category selection
@@ -119,6 +120,7 @@ class _EditSupplierProductScreenState extends State<EditSupplierProductScreen> {
     if (widget.product.description != null) _descController.text = widget.product.description!;
     _priceController.text = widget.product.price.toStringAsFixed(0);
     if (widget.product.offerPrice != null) _offerPriceController.text = widget.product.offerPrice!.toStringAsFixed(0);
+    if (widget.product.packagingCharge > 0) _packagingChargeController.text = widget.product.packagingCharge.toStringAsFixed(0);
     _quantityController.text = widget.product.quantity.toString();
 
     // Populate category IDs if references exist
@@ -167,6 +169,7 @@ class _EditSupplierProductScreenState extends State<EditSupplierProductScreen> {
     _descController.dispose();
     _priceController.dispose();
     _offerPriceController.dispose();
+    _packagingChargeController.dispose();
     _quantityController.dispose();
     // Dispose all SKU controllers
     for (final sku in _skus) {
@@ -410,6 +413,9 @@ class _EditSupplierProductScreenState extends State<EditSupplierProductScreen> {
       if (_offerPriceController.text.trim().isNotEmpty) {
         fields['offerPrice'] = _offerPriceController.text.trim();
       }
+      if (_packagingChargeController.text.trim().isNotEmpty) {
+        fields['packagingCharge'] = _packagingChargeController.text.trim();
+      }
 
       // For own listings, also include the full product fields
       if (!isLinkedProduct) {
@@ -597,13 +603,29 @@ class _EditSupplierProductScreenState extends State<EditSupplierProductScreen> {
                 ],
               ),
               const SizedBox(height: 14),
-              _buildInputField(
-                controller: _quantityController,
-                label: 'Default Quantity',
-                hint: '100',
-                icon: Iconsax.box_1,
-                keyboardType: TextInputType.number,
-                validator: (v) => v == null || v.isEmpty ? 'Required' : null,
+              Row(
+                children: [
+                  Expanded(
+                    child: _buildInputField(
+                      controller: _quantityController,
+                      label: 'Default Quantity',
+                      hint: '100',
+                      icon: Iconsax.box_1,
+                      keyboardType: TextInputType.number,
+                      validator: (v) => v == null || v.isEmpty ? 'Required' : null,
+                    ),
+                  ),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: _buildInputField(
+                      controller: _packagingChargeController,
+                      label: 'Packaging Charge',
+                      hint: '0',
+                      icon: Iconsax.box_2,
+                      keyboardType: TextInputType.number,
+                    ),
+                  ),
+                ],
               ),
               const SizedBox(height: 24),
 
