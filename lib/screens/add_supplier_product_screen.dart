@@ -77,6 +77,7 @@ class _AddSupplierProductScreenState extends State<AddSupplierProductScreen> {
   final _descController = TextEditingController();
   final _priceController = TextEditingController();
   final _offerPriceController = TextEditingController();
+  final _packagingChargeController = TextEditingController();
   final _quantityController = TextEditingController();
 
   // Category selection
@@ -124,6 +125,7 @@ class _AddSupplierProductScreenState extends State<AddSupplierProductScreen> {
     _descController.dispose();
     _priceController.dispose();
     _offerPriceController.dispose();
+    _packagingChargeController.dispose();
     _quantityController.dispose();
     // Dispose all SKU controllers
     for (final sku in _skus) {
@@ -369,6 +371,9 @@ class _AddSupplierProductScreenState extends State<AddSupplierProductScreen> {
       }
       if (_offerPriceController.text.trim().isNotEmpty) {
         stringFields['offerPrice'] = _offerPriceController.text.trim();
+      }
+      if (_packagingChargeController.text.trim().isNotEmpty) {
+        stringFields['packagingCharge'] = _packagingChargeController.text.trim();
       }
 
       // Build typed SKU list
@@ -846,13 +851,29 @@ class _AddSupplierProductScreenState extends State<AddSupplierProductScreen> {
                 ],
               ),
               const SizedBox(height: 14),
-              _buildInputField(
-                controller: _quantityController,
-                label: 'Default Quantity',
-                hint: '100',
-                icon: Iconsax.box_1,
-                keyboardType: TextInputType.number,
-                validator: (v) => v == null || v.isEmpty ? 'Required' : null,
+              Row(
+                children: [
+                  Expanded(
+                    child: _buildInputField(
+                      controller: _quantityController,
+                      label: 'Default Quantity',
+                      hint: '100',
+                      icon: Iconsax.box_1,
+                      keyboardType: TextInputType.number,
+                      validator: (v) => v == null || v.isEmpty ? 'Required' : null,
+                    ),
+                  ),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: _buildInputField(
+                      controller: _packagingChargeController,
+                      label: 'Packaging Charge',
+                      hint: '0',
+                      icon: Iconsax.box_2,
+                      keyboardType: TextInputType.number,
+                    ),
+                  ),
+                ],
               ),
               const SizedBox(height: 24),
 
