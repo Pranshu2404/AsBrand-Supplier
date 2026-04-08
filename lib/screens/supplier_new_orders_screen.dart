@@ -196,7 +196,7 @@ class _SupplierNewOrdersScreenState
                 child: TabBar(
                   controller: _tabController,
                   indicator: BoxDecoration(
-                    color: AppTheme.accentPurple,
+                    color: AppTheme.primaryAccent,
                     borderRadius: BorderRadius.circular(10),
                   ),
                   indicatorSize: TabBarIndicatorSize.tab,
@@ -216,7 +216,7 @@ class _SupplierNewOrdersScreenState
             ),
           ),
           body: supplier.isLoading && supplier.orders.isEmpty
-              ? const Center(child: CircularProgressIndicator(color: AppTheme.accentPurple))
+              ? Center(child: CircularProgressIndicator(color: AppTheme.primaryAccent))
               : Column(
                   children: [
                     // New orders banner
@@ -301,7 +301,7 @@ class _SupplierNewOrdersScreenState
     }
 
     return RefreshIndicator(
-      color: AppTheme.accentPurple,
+      color: AppTheme.primaryAccent,
       onRefresh: () => context.read<SupplierProvider>().fetchOrders(),
       child: ListView.builder(
         padding: const EdgeInsets.all(16),
