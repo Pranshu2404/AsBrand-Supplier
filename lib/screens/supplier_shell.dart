@@ -9,6 +9,7 @@ import '../providers/supplier_provider.dart';
 import '../models/order.dart';
 import 'supplier_dashboard_embedded.dart';
 import 'supplier_new_orders_screen.dart';
+import 'supplier_order_history_screen.dart';
 import 'supplier_profile_screen.dart';
 
 class SupplierShell extends StatefulWidget {
@@ -39,6 +40,7 @@ class _SupplierShellState extends State<SupplierShell>
   final List<Widget> _pages = const [
     _DashboardTab(),
     _OrdersTab(),
+    _HistoryTab(),
     _ProfileTab(),
   ];
 
@@ -212,6 +214,12 @@ class _SupplierShellState extends State<SupplierShell>
               ),
               _buildNavItem(
                 index: 2,
+                icon: Iconsax.document_text,
+                activeIcon: Iconsax.document_text_copy,
+                label: 'History',
+              ),
+              _buildNavItem(
+                index: 3,
                 icon: Iconsax.user,
                 activeIcon: Iconsax.user_copy,
                 label: 'Profile',
@@ -313,6 +321,12 @@ class _OrdersTab extends StatelessWidget {
   const _OrdersTab();
   @override
   Widget build(BuildContext context) => const SupplierNewOrdersScreen();
+}
+
+class _HistoryTab extends StatelessWidget {
+  const _HistoryTab();
+  @override
+  Widget build(BuildContext context) => const SupplierOrderHistoryScreen();
 }
 
 class _ProfileTab extends StatelessWidget {
