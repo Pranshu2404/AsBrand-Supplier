@@ -619,7 +619,7 @@ class _SupplierNewOrdersScreenState
                     Text('| $timeStr', style: const TextStyle(color: AppTheme.textSecondary, fontSize: 13)),
                     const Spacer(),
                     if (order.customerName != null)
-                      Text(order.customerName!, style: const TextStyle(color: AppTheme.accentPurple, fontWeight: FontWeight.w600, fontSize: 13)),
+                      Text(order.customerName!, style: const TextStyle(color: AppTheme.primaryAccent, fontWeight: FontWeight.w600, fontSize: 13)),
                   ],
                 ),
               ),

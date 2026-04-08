@@ -21,7 +21,7 @@ class SupplierShell extends StatefulWidget {
 class _SupplierShellState extends State<SupplierShell>
     with TickerProviderStateMixin {
   int _currentIndex = 0;
-  int _newOrdersBadge = 0;
+
 
   // Polling state
   Timer? _pollingTimer;
@@ -30,7 +30,7 @@ class _SupplierShellState extends State<SupplierShell>
 
   // New order popup animation
   late AnimationController _popupController;
-  late Animation<double> _popupSlide;
+
   late Animation<double> _popupFade;
 
   Order? _incomingOrder;
@@ -55,7 +55,16 @@ class _SupplierShellState extends State<SupplierShell>
     );
     _popupFade = CurvedAnimation(parent: _popupController, curve: Curves.easeIn);
 
-    // Start polling for new orders
+    // Connect socket for real-time new order notifications
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final authProvider = context.read<AuthProvider>();
+      final userId = authProvider.user?.id;
+      if (userId != null) {
+        context.read<SupplierProvider>().connectSocket(userId);
+      }
+    });
+
+    // Start polling for new orders as fallback
     _startPolling();
   }
 
@@ -174,6 +183,8 @@ class _SupplierShellState extends State<SupplierShell>
     if (_popupEntry != null && _popupEntry!.mounted) {
       _popupEntry!.remove();
     }
+    // Disconnect socket on dispose
+    context.read<SupplierProvider>().disconnectSocket();
     super.dispose();
   }
 
@@ -208,7 +219,7 @@ class _SupplierShellState extends State<SupplierShell>
                 icon: Iconsax.box,
                 activeIcon: Iconsax.box_copy,
                 label: 'Orders',
-                badge: _newOrdersBadge,
+                badge: context.watch<SupplierProvider>().newOrders.length,
               ),
               _buildNavItem(
                 index: 2,
