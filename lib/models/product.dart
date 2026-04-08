@@ -6,6 +6,7 @@ class Product {
   final int quantity;
   final double price;
   final double? offerPrice;
+  final double packagingCharge;
   final List<String> images;
   final CategoryRef? category;
   final CategoryRef? subCategory;
@@ -57,6 +58,7 @@ class Product {
     required this.quantity,
     required this.price,
     this.offerPrice,
+    this.packagingCharge = 0.0,
     required this.images,
     this.category,
     this.subCategory,
@@ -169,6 +171,7 @@ class Product {
       quantity: json['quantity'] ?? 0,
       price: (json['price'] ?? 0).toDouble(),
       offerPrice: json['offerPrice'] != null ? (json['offerPrice']).toDouble() : null,
+      packagingCharge: (json['packagingCharge'] ?? 0).toDouble(),
       images: imageList,
       category: json['proCategoryId'] is Map 
           ? CategoryRef.fromJson(json['proCategoryId']) 
@@ -225,6 +228,7 @@ class Product {
     'quantity': quantity,
     'price': price,
     'offerPrice': offerPrice,
+    'packagingCharge': packagingCharge,
     'images': images,
     'category': category?.toJson(),
     'subCategory': subCategory?.toJson(),
