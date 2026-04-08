@@ -226,6 +226,10 @@ class ApiService {
     return await get('${ApiConstants.shipping}/track/$orderId');
   }
 
+  Future<Map<String, dynamic>> getSupplierFinance() async {
+    return await get('${ApiConstants.baseUrl}/api/supplier/finance');
+  }
+
   // ============================================================
   // COUPON ENDPOINTS
   // ============================================================

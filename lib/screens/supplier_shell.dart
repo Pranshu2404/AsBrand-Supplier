@@ -9,7 +9,7 @@ import '../providers/supplier_provider.dart';
 import '../models/order.dart';
 import 'supplier_dashboard_embedded.dart';
 import 'supplier_new_orders_screen.dart';
-import 'supplier_order_history_screen.dart';
+import 'supplier/supplier_order_history_screen.dart';
 import 'supplier_profile_screen.dart';
 
 class SupplierShell extends StatefulWidget {

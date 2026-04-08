@@ -7,6 +7,7 @@ import '../providers/supplier_provider.dart';
 import 'supplier_products_screen.dart';
 import 'supplier_new_orders_screen.dart';
 import 'add_supplier_product_screen.dart';
+import 'supplier/supplier_finance_screen.dart';
 
 /// Embedded version of the dashboard — used inside SupplierShell (no back button).
 class SupplierDashboardScreenEmbedded extends StatefulWidget {
@@ -182,19 +183,50 @@ class _SupplierDashboardScreenEmbeddedState
                     ],
                   ),
                   const SizedBox(height: 24),
-                  Text('TOTAL REVENUE',
-                      style: TextStyle(
-                          fontSize: 11,
-                          fontWeight: FontWeight.bold,
-                          letterSpacing: 1.0,
-                          color: Colors.white.withOpacity(0.7))),
-                  const SizedBox(height: 6),
-                  Text('₹${supplier.totalRevenue}',
-                      style: const TextStyle(
-                          fontSize: 36,
-                          fontWeight: FontWeight.w800,
-                          letterSpacing: -1.0,
-                          color: Colors.white)),
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text('TOTAL REVENUE',
+                              style: TextStyle(
+                                  fontSize: 11,
+                                  fontWeight: FontWeight.bold,
+                                  letterSpacing: 1.0,
+                                  color: Colors.white.withOpacity(0.7))),
+                          const SizedBox(height: 6),
+                          Text('₹${supplier.totalRevenue}',
+                              style: const TextStyle(
+                                  fontSize: 36,
+                                  fontWeight: FontWeight.w800,
+                                  letterSpacing: -1.0,
+                                  color: Colors.white)),
+                        ],
+                      ),
+                      ElevatedButton(
+                        onPressed: () {
+                          Navigator.push(context, MaterialPageRoute(builder: (_) => const SupplierFinanceScreen()));
+                        },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.white.withOpacity(0.15),
+                          foregroundColor: Colors.white,
+                          elevation: 0,
+                          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                        ),
+                        child: const Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Text('View Payouts', style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold)),
+                            SizedBox(width: 4),
+                            Icon(Icons.arrow_forward_ios, size: 12),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
                 ],
               ),
             ),
