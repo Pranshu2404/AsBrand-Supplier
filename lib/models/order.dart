@@ -119,6 +119,7 @@ class OrderItem {
   final int quantity;
   final double price;
   final String? variant;
+  final String? supplierId;
 
   OrderItem({
     this.productId,
@@ -127,6 +128,7 @@ class OrderItem {
     required this.quantity,
     required this.price,
     this.variant,
+    this.supplierId,
   });
 
   factory OrderItem.fromJson(Map<String, dynamic> json) {
@@ -151,6 +153,7 @@ class OrderItem {
       quantity: json['quantity'] ?? 1,
       price: (json['price'] ?? 0).toDouble(),
       variant: json['variant'],
+      supplierId: json['supplierId'] is Map ? json['supplierId']['_id'] : json['supplierId'],
     );
   }
 
@@ -162,6 +165,7 @@ class OrderItem {
       'quantity': quantity,
       'price': price,
       'variant': variant,
+      'supplierId': supplierId,
     };
   }
 }
