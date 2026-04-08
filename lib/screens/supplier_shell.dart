@@ -92,15 +92,7 @@ class _SupplierShellState extends State<SupplierShell>
         return;
       }
 
-      // Count today's orders
-      final today = DateTime.now();
-      final todayOrders = orders.where((o) {
-        return o.orderDate.year == today.year &&
-            o.orderDate.month == today.month &&
-            o.orderDate.day == today.day;
-      }).length;
 
-      // Badge is handled by provider.newOrders.length via watch()
 
       // Show popup if genuinely new order arrived
       if (latestOrder.id != _lastKnownOrderId) {
