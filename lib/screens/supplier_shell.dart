@@ -100,7 +100,7 @@ class _SupplierShellState extends State<SupplierShell>
             o.orderDate.day == today.day;
       }).length;
 
-      setState(() => _newOrdersBadge = todayOrders);
+      // Badge is handled by provider.newOrders.length via watch()
 
       // Show popup if genuinely new order arrived
       if (latestOrder.id != _lastKnownOrderId) {
