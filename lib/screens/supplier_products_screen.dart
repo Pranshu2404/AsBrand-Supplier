@@ -28,17 +28,17 @@ class _SupplierProductsScreenState extends State<SupplierProductsScreen> {
     final supplier = context.watch<SupplierProvider>();
 
     return Scaffold(
-      backgroundColor: const Color(0xFFF8F9FA),
+      backgroundColor: AppTheme.scaffoldBackground,
       appBar: AppBar(
-        backgroundColor: Colors.white,
+        backgroundColor: AppTheme.scaffoldBackground,
         surfaceTintColor: Colors.transparent,
         elevation: 0,
         leading: IconButton(
           icon: const Icon(Icons.arrow_back_ios_new, color: AppTheme.textPrimary, size: 20),
           onPressed: () => Navigator.pop(context),
         ),
-        title: const Text('My Products',
-          style: TextStyle(fontSize: 17, fontWeight: FontWeight.w600, color: AppTheme.textPrimary)),
+        title: const Text('Inventory',
+          style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700, color: AppTheme.textPrimary, letterSpacing: -0.5)),
         centerTitle: true,
       ),
       floatingActionButton: FloatingActionButton.extended(
@@ -46,28 +46,37 @@ class _SupplierProductsScreenState extends State<SupplierProductsScreen> {
           await Navigator.push(context, MaterialPageRoute(builder: (_) => const AddSupplierProductScreen()));
           if (mounted) context.read<SupplierProvider>().fetchProducts();
         },
-        backgroundColor: AppTheme.primaryColor,
+        backgroundColor: AppTheme.primaryAccent,
         icon: const Icon(Icons.add, color: Colors.white),
-        label: const Text('Add Product', style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white)),
+        label: const Text('Add SKU', style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white)),
       ),
       body: supplier.isLoading
-          ? const Center(child: CircularProgressIndicator())
+          ? const Center(child: CircularProgressIndicator(color: AppTheme.primaryAccent))
           : supplier.products.isEmpty
               ? Center(
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Icon(Iconsax.box, size: 64, color: Colors.grey.shade300),
-                      const SizedBox(height: 16),
-                      const Text('No Products Yet', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                      Container(
+                        padding: const EdgeInsets.all(24),
+                        decoration: const BoxDecoration(
+                          color: AppTheme.surfaceColor,
+                          shape: BoxShape.circle,
+                        ),
+                        child: const Icon(Iconsax.box, size: 48, color: AppTheme.textHint),
+                      ),
+                      const SizedBox(height: 24),
+                      const Text('No Inventory Found', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: AppTheme.textPrimary)),
                       const SizedBox(height: 8),
-                      Text('Tap the + button to add your first product',
-                        style: TextStyle(color: Colors.grey.shade500)),
+                      const Text('Tap the + button to add your first SKU',
+                        style: TextStyle(color: AppTheme.textSecondary)),
                     ],
                   ),
                 )
               : RefreshIndicator(
                   onRefresh: () => supplier.fetchProducts(),
+                  color: AppTheme.primaryAccent,
+                  backgroundColor: AppTheme.surfaceColor,
                   child: ListView.builder(
                     padding: const EdgeInsets.all(16),
                     itemCount: supplier.products.length,
@@ -83,9 +92,9 @@ class _SupplierProductsScreenState extends State<SupplierProductsScreen> {
     return Container(
       margin: const EdgeInsets.only(bottom: 12),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: AppTheme.cardBackground,
         borderRadius: BorderRadius.circular(16),
-        boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.04), blurRadius: 10, offset: const Offset(0, 4))],
+        border: Border.all(color: const Color(0xFF27272A)),
       ),
       child: Padding(
         padding: const EdgeInsets.all(14),
@@ -95,14 +104,14 @@ class _SupplierProductsScreenState extends State<SupplierProductsScreen> {
             Container(
               width: 80, height: 80,
               decoration: BoxDecoration(
-                color: Colors.grey.shade100,
+                color: AppTheme.surfaceColor,
                 borderRadius: BorderRadius.circular(12),
                 image: imageUrl != null
                     ? DecorationImage(image: NetworkImage(imageUrl), fit: BoxFit.cover)
                     : null,
               ),
               child: imageUrl == null
-                  ? Icon(Iconsax.image, color: Colors.grey.shade300, size: 30)
+                  ? const Icon(Iconsax.image, color: AppTheme.textHint, size: 30)
                   : null,
             ),
             const SizedBox(width: 14),
@@ -123,7 +132,7 @@ class _SupplierProductsScreenState extends State<SupplierProductsScreen> {
                       if (product.offerPrice != null && product.offerPrice! < product.price) ...[
                         const SizedBox(width: 6),
                         Text('₹${product.price}',
-                          style: TextStyle(fontSize: 12, decoration: TextDecoration.lineThrough, color: Colors.grey.shade400)),
+                          style: const TextStyle(fontSize: 12, decoration: TextDecoration.lineThrough, color: AppTheme.textSecondary)),
                       ],
                     ],
                   ),
@@ -131,16 +140,16 @@ class _SupplierProductsScreenState extends State<SupplierProductsScreen> {
                   Row(
                     children: [
                       Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                         decoration: BoxDecoration(
-                          color: product.quantity > 0 ? AppTheme.successGreen.withOpacity(0.1) : Colors.red.shade50,
+                          color: product.quantity > 0 ? AppTheme.successGreen.withOpacity(0.15) : AppTheme.errorColor.withOpacity(0.15),
                           borderRadius: BorderRadius.circular(6),
                         ),
                         child: Text(
                           product.quantity > 0 ? 'In Stock (${product.quantity})' : 'Out of Stock',
                           style: TextStyle(
-                            fontSize: 11, fontWeight: FontWeight.w600,
-                            color: product.quantity > 0 ? AppTheme.successGreen : Colors.red,
+                            fontSize: 11, fontWeight: FontWeight.w700,
+                            color: product.quantity > 0 ? AppTheme.successGreen : AppTheme.errorColor,
                           ),
                         ),
                       ),
@@ -149,21 +158,24 @@ class _SupplierProductsScreenState extends State<SupplierProductsScreen> {
                 ],
               ),
             ),
-            // Edit button
-            IconButton(
-              onPressed: () async {
-                await Navigator.push(context, MaterialPageRoute(
-                  builder: (_) => EditSupplierProductScreen(product: product)
-                ));
-                if (mounted) context.read<SupplierProvider>().fetchProducts();
-              },
-              icon: const Icon(Iconsax.edit, color: AppTheme.primaryColor, size: 20),
-            ),
-            // Delete button
-            IconButton(
-              onPressed: () => _confirmDelete(product),
-              icon: const Icon(Iconsax.trash, color: Colors.red, size: 20),
-            ),
+            // Actions
+            Column(
+              children: [
+                IconButton(
+                  onPressed: () async {
+                    await Navigator.push(context, MaterialPageRoute(
+                      builder: (_) => EditSupplierProductScreen(product: product)
+                    ));
+                    if (mounted) context.read<SupplierProvider>().fetchProducts();
+                  },
+                  icon: const Icon(Iconsax.edit, color: AppTheme.primaryAccent, size: 20),
+                ),
+                IconButton(
+                  onPressed: () => _confirmDelete(product),
+                  icon: const Icon(Iconsax.trash, color: AppTheme.errorColor, size: 20),
+                ),
+              ],
+            )
           ],
         ),
       ),
@@ -176,13 +188,18 @@ class _SupplierProductsScreenState extends State<SupplierProductsScreen> {
     showDialog(
       context: context,
       builder: (ctx) => AlertDialog(
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(18)),
-        title: const Text('Delete Product?'),
-        content: Text('Are you sure you want to delete "${product.name}"?'),
+        backgroundColor: AppTheme.cardBackground,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(16),
+          side: const BorderSide(color: Color(0xFF27272A)),
+        ),
+        title: const Text('Delete SKU?', style: TextStyle(color: AppTheme.textPrimary, fontWeight: FontWeight.bold)),
+        content: Text('Are you sure you want to delete "${product.name}"?', 
+          style: const TextStyle(color: AppTheme.textSecondary)),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(ctx),
-            child: const Text('Cancel'),
+            child: const Text('Cancel', style: TextStyle(color: AppTheme.textSecondary)),
           ),
           ElevatedButton(
             onPressed: () async {
@@ -190,11 +207,14 @@ class _SupplierProductsScreenState extends State<SupplierProductsScreen> {
               final success = await context.read<SupplierProvider>().deleteProduct(idToDelete);
               if (success && mounted) {
                 ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text('Product deleted')),
+                  const SnackBar(content: Text('SKU deleted successfully')),
                 );
               }
             },
-            style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
+            style: ElevatedButton.styleFrom(
+              backgroundColor: AppTheme.errorColor,
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+            ),
             child: const Text('Delete'),
           ),
         ],
