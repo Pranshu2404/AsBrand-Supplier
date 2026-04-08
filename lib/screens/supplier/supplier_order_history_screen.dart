@@ -4,6 +4,7 @@ import 'package:iconsax_flutter/iconsax_flutter.dart';
 import '../../core/theme.dart';
 import '../../providers/supplier_provider.dart';
 import '../../models/order.dart';
+import '../../providers/auth_provider.dart';
 import 'supplier_order_history_detail_screen.dart';
 import 'package:intl/intl.dart';
 
@@ -43,7 +44,7 @@ class _SupplierOrderHistoryScreenState extends State<SupplierOrderHistoryScreen>
     }
 
     return Scaffold(
-      backgroundColor: AppTheme.background,
+      backgroundColor: AppTheme.scaffoldBackground,
       appBar: AppBar(
         title: const Text('Order History', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18, color: AppTheme.textPrimary)),
         backgroundColor: Colors.white,
@@ -123,7 +124,7 @@ class _SupplierOrderHistoryScreenState extends State<SupplierOrderHistoryScreen>
       statusIcon = Icons.cancel;
     }
 
-    final dateStr = DateFormat('dd MMM yyyy, hh:mm a').format(order.createdAt);
+    final dateStr = DateFormat('dd MMM yyyy, hh:mm a').format(order.orderDate);
     
     // Filter items specific to this supplier
     final authProvider = context.read<AuthProvider>();
@@ -189,7 +190,7 @@ class _SupplierOrderHistoryScreenState extends State<SupplierOrderHistoryScreen>
             Text(dateStr, style: TextStyle(color: Colors.grey.shade500, fontSize: 12)),
             const Padding(
               padding: EdgeInsets.symmetric(vertical: 12),
-              child: Divider(height: 1, color: AppTheme.divider),
+              child: Divider(height: 1, color: Color(0xFFE5E7EB)),
             ),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
