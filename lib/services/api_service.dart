@@ -513,6 +513,28 @@ class ApiService {
     return [];
   }
 
+  // ============================================================
+  // SUPPLIER ORDER ACTIONS (Zomato lifecycle)
+  // ============================================================
+
+  Future<Map<String, dynamic>> acceptOrder(String orderId, {int prepMinutes = 15}) async {
+    return await put('${ApiConstants.supplierOrders}/$orderId/accept', {
+      'estimatedPrepMinutes': prepMinutes,
+    });
+  }
+
+  Future<Map<String, dynamic>> rejectOrder(String orderId) async {
+    return await put('${ApiConstants.supplierOrders}/$orderId/reject', {});
+  }
+
+  Future<Map<String, dynamic>> markOrderReady(String orderId) async {
+    return await put('${ApiConstants.supplierOrders}/$orderId/ready', {});
+  }
+
+  Future<Map<String, dynamic>> markOrderPickedUp(String orderId) async {
+    return await put('${ApiConstants.supplierOrders}/$orderId/picked-up', {});
+  }
+
   Future<Map<String, dynamic>?> getSupplierById(String id) async {
     try {
       final response = await get('${ApiConstants.baseUrl}/supplier/$id');

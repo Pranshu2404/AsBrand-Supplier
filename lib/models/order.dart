@@ -24,6 +24,17 @@ class Order {
   final int? estimatedDeliveryMinutes;
   final String? assignedDriver;
 
+  // Zomato-style lifecycle timestamps
+  final DateTime? supplierAcceptedAt;
+  final DateTime? prepStartedAt;
+  final DateTime? readyAt;
+  final DateTime? pickedUpAt;
+  final int estimatedPrepMinutes;
+
+  // Customer info (populated from userID)
+  final String? customerName;
+  final String? customerPhone;
+
   Order({
     required this.id,
     this.userId,
@@ -46,6 +57,13 @@ class Order {
     this.estimatedDeliveryDate,
     this.estimatedDeliveryMinutes,
     this.assignedDriver,
+    this.supplierAcceptedAt,
+    this.prepStartedAt,
+    this.readyAt,
+    this.pickedUpAt,
+    this.estimatedPrepMinutes = 15,
+    this.customerName,
+    this.customerPhone,
   });
 
   factory Order.fromJson(Map<String, dynamic> json) {
@@ -72,6 +90,13 @@ class Order {
       estimatedDeliveryDate: json['estimatedDeliveryDate'],
       estimatedDeliveryMinutes: json['estimatedDeliveryMinutes'] != null ? (json['estimatedDeliveryMinutes'] as num).toInt() : null,
       assignedDriver: json['assignedDriver'] is Map ? json['assignedDriver']['_id'] : json['assignedDriver'],
+      supplierAcceptedAt: json['supplierAcceptedAt'] != null ? DateTime.tryParse(json['supplierAcceptedAt']) : null,
+      prepStartedAt: json['prepStartedAt'] != null ? DateTime.tryParse(json['prepStartedAt']) : null,
+      readyAt: json['readyAt'] != null ? DateTime.tryParse(json['readyAt']) : null,
+      pickedUpAt: json['pickedUpAt'] != null ? DateTime.tryParse(json['pickedUpAt']) : null,
+      estimatedPrepMinutes: (json['estimatedPrepMinutes'] ?? 15) as int,
+      customerName: json['userID'] is Map ? json['userID']['name'] : null,
+      customerPhone: json['userID'] is Map ? json['userID']['phone'] : null,
     );
   }
 
