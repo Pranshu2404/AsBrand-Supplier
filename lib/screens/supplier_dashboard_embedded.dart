@@ -39,9 +39,9 @@ class _SupplierDashboardScreenEmbeddedState
     final storeName = auth.user?.supplierProfile?.storeName ?? 'My Store';
 
     return Scaffold(
-      backgroundColor: const Color(0xFFF4F5F9),
+      backgroundColor: AppTheme.scaffoldBackground,
       appBar: AppBar(
-        backgroundColor: Colors.white,
+        backgroundColor: AppTheme.scaffoldBackground,
         surfaceTintColor: Colors.transparent,
         elevation: 0,
         automaticallyImplyLeading: false,
@@ -50,29 +50,30 @@ class _SupplierDashboardScreenEmbeddedState
           children: [
             Text(
               'Hello, ${auth.user?.name?.split(' ').first ?? 'Supplier'} 👋',
-              style: TextStyle(
-                fontSize: 12,
-                color: Colors.grey.shade500,
-                fontWeight: FontWeight.w500,
+              style: const TextStyle(
+                fontSize: 13,
+                color: AppTheme.textSecondary,
+                fontWeight: FontWeight.w600,
               ),
             ),
             const Text(
               'Dashboard',
               style: TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.w700,
+                fontSize: 20,
+                fontWeight: FontWeight.w800,
                 color: AppTheme.textPrimary,
+                letterSpacing: -0.5,
               ),
             ),
           ],
         ),
         actions: [
           IconButton(
-            icon: const Icon(Iconsax.refresh, color: AppTheme.textPrimary, size: 20),
+            icon: const Icon(Iconsax.refresh, color: AppTheme.textPrimary, size: 22),
             onPressed: () => supplier.fetchDashboard(),
             tooltip: 'Refresh',
           ),
-          const SizedBox(width: 4),
+          const SizedBox(width: 8),
         ],
       ),
       body: _buildBody(auth, supplier, storeName),
@@ -93,42 +94,22 @@ class _SupplierDashboardScreenEmbeddedState
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Container(
-              width: 100,
-              height: 100,
+              width: 90,
+              height: 90,
               decoration: BoxDecoration(
-                color: Colors.orange.withOpacity(0.1),
+                color: AppTheme.warningYellow.withOpacity(0.1),
                 shape: BoxShape.circle,
               ),
-              child:
-                  const Icon(Icons.hourglass_empty_rounded, color: Colors.orange, size: 50),
+              child: const Icon(Icons.hourglass_empty_rounded, color: AppTheme.warningYellow, size: 44),
             ),
-            const SizedBox(height: 28),
+            const SizedBox(height: 24),
             const Text('Application Under Review',
-                style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold)),
+                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: AppTheme.textPrimary)),
             const SizedBox(height: 12),
             Text(
               'Your supplier account "$storeName" is pending admin approval.\nYou\'ll get access to the dashboard once approved.',
               textAlign: TextAlign.center,
-              style: TextStyle(fontSize: 14, color: Colors.grey.shade600, height: 1.6),
-            ),
-            const SizedBox(height: 28),
-            Container(
-              padding: const EdgeInsets.all(16),
-              decoration: BoxDecoration(
-                color: Colors.orange.withOpacity(0.05),
-                borderRadius: BorderRadius.circular(14),
-                border: Border.all(color: Colors.orange.withOpacity(0.2)),
-              ),
-              child: Row(
-                children: [
-                  const Icon(Iconsax.info_circle, color: Colors.orange, size: 20),
-                  const SizedBox(width: 12),
-                  Expanded(
-                    child: Text('This usually takes 1-2 business days.',
-                        style: TextStyle(fontSize: 13, color: Colors.grey.shade700)),
-                  ),
-                ],
-              ),
+              style: const TextStyle(fontSize: 14, color: AppTheme.textSecondary, height: 1.5),
             ),
           ],
         ),
@@ -139,31 +120,22 @@ class _SupplierDashboardScreenEmbeddedState
   Widget _buildApprovedDashboard(SupplierProvider supplier, String storeName) {
     return RefreshIndicator(
       onRefresh: () => supplier.fetchDashboard(),
-      color: AppTheme.primaryColor,
+      color: AppTheme.primaryAccent,
+      backgroundColor: AppTheme.surfaceColor,
       child: SingleChildScrollView(
         physics: const AlwaysScrollableScrollPhysics(),
-        padding: const EdgeInsets.all(16),
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Store Header Card
+            // Operational Revenue Header
             Container(
               width: double.infinity,
-              padding: const EdgeInsets.all(20),
+              padding: const EdgeInsets.all(24),
               decoration: BoxDecoration(
-                gradient: const LinearGradient(
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
-                  colors: [Color(0xFF1E1E2E), Color(0xFF0A0A0B)],
-                ),
-                borderRadius: BorderRadius.circular(22),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black.withOpacity(0.18),
-                    blurRadius: 20,
-                    offset: const Offset(0, 10),
-                  ),
-                ],
+                gradient: AppTheme.activeOrderGradient,
+                borderRadius: BorderRadius.circular(20),
+                boxShadow: AppTheme.cardShadow,
               ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -171,37 +143,37 @@ class _SupplierDashboardScreenEmbeddedState
                   Row(
                     children: [
                       Container(
-                        width: 48,
-                        height: 48,
+                        padding: const EdgeInsets.all(10),
                         decoration: BoxDecoration(
-                          color: Colors.white.withOpacity(0.15),
-                          borderRadius: BorderRadius.circular(14),
+                          color: Colors.white.withOpacity(0.1),
+                          borderRadius: BorderRadius.circular(12),
                         ),
                         child: const Icon(Iconsax.shop, color: Colors.white, size: 24),
                       ),
-                      const SizedBox(width: 14),
+                      const SizedBox(width: 16),
                       Expanded(
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(storeName,
                                 style: const TextStyle(
-                                    fontSize: 20,
+                                    fontSize: 18,
                                     fontWeight: FontWeight.bold,
                                     color: Colors.white)),
-                            const SizedBox(height: 4),
+                            const SizedBox(height: 6),
                             Container(
                               padding: const EdgeInsets.symmetric(
-                                  horizontal: 8, vertical: 3),
+                                  horizontal: 8, vertical: 4),
                               decoration: BoxDecoration(
-                                color:
-                                    AppTheme.successGreen.withOpacity(0.2),
+                                color: AppTheme.successGreen.withOpacity(0.2),
                                 borderRadius: BorderRadius.circular(6),
+                                border: Border.all(color: AppTheme.successGreen.withOpacity(0.5)),
                               ),
-                              child: const Text('✓ Verified Supplier',
+                              child: const Text('VERIFIED',
                                   style: TextStyle(
-                                      fontSize: 11,
-                                      fontWeight: FontWeight.w600,
+                                      fontSize: 9,
+                                      fontWeight: FontWeight.w800,
+                                      letterSpacing: 1.0,
                                       color: AppTheme.successGreen)),
                             ),
                           ],
@@ -209,98 +181,107 @@ class _SupplierDashboardScreenEmbeddedState
                       ),
                     ],
                   ),
-                  const SizedBox(height: 20),
-                  Text('Total Revenue',
+                  const SizedBox(height: 24),
+                  Text('TOTAL REVENUE',
                       style: TextStyle(
-                          fontSize: 12,
-                          color: Colors.white.withOpacity(0.6))),
-                  const SizedBox(height: 4),
+                          fontSize: 11,
+                          fontWeight: FontWeight.bold,
+                          letterSpacing: 1.0,
+                          color: Colors.white.withOpacity(0.7))),
+                  const SizedBox(height: 6),
                   Text('₹${supplier.totalRevenue}',
                       style: const TextStyle(
-                          fontSize: 32,
-                          fontWeight: FontWeight.bold,
+                          fontSize: 36,
+                          fontWeight: FontWeight.w800,
+                          letterSpacing: -1.0,
                           color: Colors.white)),
                 ],
               ),
             ),
-            const SizedBox(height: 16),
+            const SizedBox(height: 20),
 
-            // Stats Grid
+            // High-Contrast Operational Stats
+            const Text('OPERATIONAL METRICS',
+                style: TextStyle(
+                    fontSize: 12,
+                    fontWeight: FontWeight.w800,
+                    letterSpacing: 1.0,
+                    color: AppTheme.textSecondary)),
+            const SizedBox(height: 12),
             Row(
               children: [
-                Expanded(
-                  child: _buildStatCard(
-                    icon: Iconsax.box,
-                    label: 'Products',
-                    value: '${supplier.totalProducts}',
-                    color: const Color(0xFF6366F1),
-                  ),
-                ),
-                const SizedBox(width: 10),
-                Expanded(
-                  child: _buildStatCard(
-                    icon: Iconsax.shopping_bag,
-                    label: 'Orders',
-                    value: '${supplier.totalOrders}',
-                    color: const Color(0xFFF59E0B),
-                  ),
-                ),
-              ],
-            ),
-            const SizedBox(height: 10),
-            Row(
-              children: [
-                Expanded(
-                  child: _buildStatCard(
-                    icon: Iconsax.tick_circle,
-                    label: 'Active',
-                    value: '${supplier.activeProducts}',
-                    color: AppTheme.successGreen,
-                  ),
-                ),
-                const SizedBox(width: 10),
                 Expanded(
                   child: _buildStatCard(
                     icon: Iconsax.clock,
                     label: 'Pending',
                     value: '${supplier.pendingOrders}',
-                    color: const Color(0xFFEF4444),
+                    color: AppTheme.accentOrange,
+                    isAlert: supplier.pendingOrders > 0,
+                  ),
+                ),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: _buildStatCard(
+                    icon: Iconsax.shopping_bag,
+                    label: 'Orders',
+                    value: '${supplier.totalOrders}',
+                    color: AppTheme.primaryAccent,
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 12),
+            Row(
+              children: [
+                Expanded(
+                  child: _buildStatCard(
+                    icon: Iconsax.tick_circle,
+                    label: 'Active Items',
+                    value: '${supplier.activeProducts}',
+                    color: AppTheme.successGreen,
+                  ),
+                ),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: _buildStatCard(
+                    icon: Iconsax.box,
+                    label: 'Total Items',
+                    value: '${supplier.totalProducts}',
+                    color: AppTheme.textPrimary,
                   ),
                 ),
               ],
             ),
             const SizedBox(height: 24),
 
-            // Quick Actions
-            const Text('Quick Actions',
+            // Quick Actions (Zepto style solid un-raised cards)
+            const Text('QUICK ACTIONS',
                 style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                    color: AppTheme.textPrimary)),
+                    fontSize: 12,
+                    fontWeight: FontWeight.w800,
+                    letterSpacing: 1.0,
+                    color: AppTheme.textSecondary)),
             const SizedBox(height: 12),
             _buildActionCard(
               icon: Iconsax.add_circle,
               title: 'Add New Product',
-              subtitle: 'List a new product for sale',
-              color: const Color(0xFF6366F1),
+              subtitle: 'Instantly list a new SKU',
               onTap: () => Navigator.push(context,
                   MaterialPageRoute(builder: (_) => const AddSupplierProductScreen())),
             ),
             const SizedBox(height: 10),
             _buildActionCard(
               icon: Iconsax.box,
-              title: 'My Products',
-              subtitle: 'View and manage your products',
-              color: AppTheme.successGreen,
+              title: 'Inventory & Pricing',
+              subtitle: 'Update stock to avoid cancellations',
               onTap: () => Navigator.push(context,
                   MaterialPageRoute(builder: (_) => const SupplierProductsScreen())),
             ),
             const SizedBox(height: 10),
             _buildActionCard(
-              icon: Iconsax.shopping_bag,
-              title: 'All Orders',
-              subtitle: 'View all orders on your products',
-              color: const Color(0xFFF59E0B),
+              icon: Iconsax.receipt,
+              title: 'Order History',
+              subtitle: 'View completed and cancelled orders',
               onTap: () => Navigator.push(context,
                   MaterialPageRoute(builder: (_) => const SupplierNewOrdersScreen())),
             ),
@@ -316,39 +297,48 @@ class _SupplierDashboardScreenEmbeddedState
     required String label,
     required String value,
     required Color color,
+    bool isAlert = false,
   }) {
     return Container(
-      padding: const EdgeInsets.all(18),
+      padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: AppTheme.cardBackground,
         borderRadius: BorderRadius.circular(16),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.04),
-            blurRadius: 12,
-            offset: const Offset(0, 4),
-          ),
-        ],
+        border: Border.all(
+          color: isAlert ? color.withOpacity(0.5) : const Color(0xFF27272A),
+          width: isAlert ? 1.5 : 1.0,
+        ),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Container(
-            padding: const EdgeInsets.all(8),
-            decoration: BoxDecoration(
-              color: color.withOpacity(0.1),
-              borderRadius: BorderRadius.circular(10),
-            ),
-            child: Icon(icon, color: color, size: 20),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Container(
+                padding: const EdgeInsets.all(8),
+                decoration: BoxDecoration(
+                  color: color.withOpacity(0.15),
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                child: Icon(icon, color: color, size: 18),
+              ),
+              if (isAlert)
+                Container(
+                  width: 8, height: 8,
+                  decoration: BoxDecoration(color: color, shape: BoxShape.circle),
+                )
+            ],
           ),
-          const SizedBox(height: 14),
+          const SizedBox(height: 16),
           Text(value,
               style: const TextStyle(
-                  fontSize: 24,
+                  fontSize: 28,
                   fontWeight: FontWeight.bold,
+                  letterSpacing: -1.0,
                   color: AppTheme.textPrimary)),
-          const SizedBox(height: 4),
-          Text(label, style: TextStyle(fontSize: 12, color: Colors.grey.shade500)),
+          const SizedBox(height: 2),
+          Text(label, style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w600, color: AppTheme.textSecondary)),
         ],
       ),
     );
@@ -358,7 +348,6 @@ class _SupplierDashboardScreenEmbeddedState
     required IconData icon,
     required String title,
     required String subtitle,
-    required Color color,
     required VoidCallback onTap,
   }) {
     return InkWell(
@@ -367,27 +356,21 @@ class _SupplierDashboardScreenEmbeddedState
       child: Container(
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: AppTheme.cardBackground,
           borderRadius: BorderRadius.circular(16),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withOpacity(0.04),
-              blurRadius: 10,
-              offset: const Offset(0, 4),
-            ),
-          ],
+          border: Border.all(color: const Color(0xFF27272A)),
         ),
         child: Row(
           children: [
             Container(
-              padding: const EdgeInsets.all(11),
+              padding: const EdgeInsets.all(12),
               decoration: BoxDecoration(
-                color: color.withOpacity(0.1),
+                color: AppTheme.surfaceColor,
                 borderRadius: BorderRadius.circular(12),
               ),
-              child: Icon(icon, color: color, size: 22),
+              child: Icon(icon, color: AppTheme.textPrimary, size: 22),
             ),
-            const SizedBox(width: 14),
+            const SizedBox(width: 16),
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -395,15 +378,15 @@ class _SupplierDashboardScreenEmbeddedState
                   Text(title,
                       style: const TextStyle(
                           fontSize: 15,
-                          fontWeight: FontWeight.w600,
+                          fontWeight: FontWeight.w700,
                           color: AppTheme.textPrimary)),
-                  const SizedBox(height: 2),
+                  const SizedBox(height: 4),
                   Text(subtitle,
-                      style: TextStyle(fontSize: 12, color: Colors.grey.shade500)),
+                      style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w500, color: AppTheme.textSecondary)),
                 ],
               ),
             ),
-            Icon(Iconsax.arrow_right_3, size: 18, color: Colors.grey.shade400),
+            const Icon(Iconsax.arrow_right_3_copy, size: 18, color: AppTheme.textHint),
           ],
         ),
       ),
