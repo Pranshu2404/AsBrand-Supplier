@@ -63,20 +63,31 @@ class _SupplierNewOrdersScreenState
 
   void _showNewOrderPopup(Order order) {
     if (_incomingOrder != null) return; // Already showing one
+    
+    final now = DateTime.now();
+    // Assuming backend passes UTC timezone properly
+    final elapsed = now.difference(order.orderDate).inSeconds;
+    int remaining = 300 - elapsed;
+    if (remaining < 0) remaining = 0;
+
     setState(() {
       _incomingOrder = order;
-      _acceptCountdown = 300; // 5 minutes
+      _acceptCountdown = remaining; 
     });
+
     _countdownTimer?.cancel();
     _countdownTimer = Timer.periodic(const Duration(seconds: 1), (timer) {
       if (_acceptCountdown <= 0) {
-        _dismissPopup();
+        _rejectOrder(order.id); // Auto-reject order or mark missed
         timer.cancel();
       } else {
         setState(() => _acceptCountdown--);
       }
     });
-    HapticFeedback.heavyImpact();
+
+    if (remaining > 0) {
+      HapticFeedback.heavyImpact();
+    }
   }
 
   void _dismissPopup() {
