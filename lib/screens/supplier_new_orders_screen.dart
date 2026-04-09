@@ -7,6 +7,7 @@ import 'package:intl/intl.dart';
 import '../core/theme.dart';
 import '../providers/supplier_provider.dart';
 import '../models/order.dart';
+import 'supplier/supplier_active_order_detail_screen.dart';
 
 // ─────────────────────────────────────────────────────────────
 // Zomato-Style Supplier Orders Screen
@@ -329,8 +330,18 @@ class _SupplierNewOrdersScreenState
         borderRadius: BorderRadius.circular(16),
         border: Border.all(color: const Color(0xFF27272A)),
       ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+      child: InkWell(
+        onTap: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (_) => SupplierActiveOrderDetailScreen(order: order),
+            ),
+          );
+        },
+        borderRadius: BorderRadius.circular(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           // Header
           Container(
