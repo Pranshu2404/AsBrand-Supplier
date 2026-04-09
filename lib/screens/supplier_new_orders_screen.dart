@@ -569,6 +569,7 @@ class _SupplierNewOrdersScreenState
             ),
         ],
       ),
+      ),
     );
   }
 
