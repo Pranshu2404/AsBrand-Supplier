@@ -22,7 +22,7 @@ class Order {
   final String? courierName;
   final String? estimatedDeliveryDate;
   final int? estimatedDeliveryMinutes;
-  final String? assignedDriver;
+  final dynamic assignedDriver;
 
   // Zomato-style lifecycle timestamps
   final DateTime? supplierAcceptedAt;
@@ -89,7 +89,7 @@ class Order {
       courierName: json['courierName'],
       estimatedDeliveryDate: json['estimatedDeliveryDate'],
       estimatedDeliveryMinutes: json['estimatedDeliveryMinutes'] != null ? (json['estimatedDeliveryMinutes'] as num).toInt() : null,
-      assignedDriver: json['assignedDriver'] is Map ? json['assignedDriver']['_id'] : json['assignedDriver'],
+      assignedDriver: json['assignedDriver'],
       supplierAcceptedAt: json['supplierAcceptedAt'] != null ? DateTime.tryParse(json['supplierAcceptedAt']) : null,
       prepStartedAt: json['prepStartedAt'] != null ? DateTime.tryParse(json['prepStartedAt']) : null,
       readyAt: json['readyAt'] != null ? DateTime.tryParse(json['readyAt']) : null,
