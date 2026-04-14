@@ -35,7 +35,7 @@ class AsBrandSupplierApp extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => BrandProvider()),
       ],
       child: MaterialApp(
-        title: 'AsBrand Supplier',
+        title: 'LuneMart Supplier',
         debugShowCheckedModeBanner: false,
         theme: AppTheme.lightTheme,
         home: const _AppRoot(),
@@ -115,7 +115,7 @@ class _SplashScreen extends StatelessWidget {
             ),
             const SizedBox(height: 24),
             const Text(
-              'AsBrand Supplier',
+              'LuneMart Supplier',
               style: TextStyle(
                 fontSize: 20,
                 fontWeight: FontWeight.bold,

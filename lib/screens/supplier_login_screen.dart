@@ -214,7 +214,7 @@ class _SupplierLoginScreenState extends State<SupplierLoginScreen>
                   child: Column(
                     children: [
                       const Text(
-                        'AsBrand Supplier',
+                        'LuneMart Supplier',
                         style: TextStyle(
                           fontSize: 28,
                           fontWeight: FontWeight.bold,
