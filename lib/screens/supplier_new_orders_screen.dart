@@ -10,7 +10,7 @@ import '../models/order.dart';
 import 'supplier/supplier_active_order_detail_screen.dart';
 
 // ─────────────────────────────────────────────────────────────
-// Zomato-Style Supplier Orders Screen
+// Supplier Orders Screen — Light Theme
 // Tabs: Preparing | Ready | Picked up
 // New order popup with countdown timer
 // ─────────────────────────────────────────────────────────────
@@ -178,7 +178,7 @@ class _SupplierNewOrdersScreenState
         Scaffold(
           backgroundColor: AppTheme.scaffoldBackground,
           appBar: AppBar(
-            backgroundColor: AppTheme.scaffoldBackground,
+            backgroundColor: Colors.white,
             surfaceTintColor: Colors.transparent,
             elevation: 0,
             title: const Text(
@@ -202,7 +202,7 @@ class _SupplierNewOrdersScreenState
               child: Container(
                 margin: const EdgeInsets.symmetric(horizontal: 16),
                 decoration: BoxDecoration(
-                  color: const Color(0xFF1E1E1E),
+                  color: AppTheme.surfaceColor,
                   borderRadius: BorderRadius.circular(12),
                 ),
                 child: TabBar(
@@ -337,9 +337,10 @@ class _SupplierNewOrdersScreenState
     return Container(
       margin: const EdgeInsets.only(bottom: 12),
       decoration: BoxDecoration(
-        color: const Color(0xFF1A1A1E),
+        color: Colors.white,
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: const Color(0xFF27272A)),
+        border: Border.all(color: AppTheme.borderColor),
+        boxShadow: AppTheme.softShadow,
       ),
       child: InkWell(
         onTap: () {
@@ -357,16 +358,16 @@ class _SupplierNewOrdersScreenState
           // Header
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-            decoration: const BoxDecoration(
-              color: Color(0xFF222226),
-              borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
+            decoration: BoxDecoration(
+              color: AppTheme.surfaceColor,
+              borderRadius: const BorderRadius.vertical(top: Radius.circular(16)),
             ),
             child: Row(
               children: [
                 Container(
                   padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                   decoration: BoxDecoration(
-                    color: _statusColor(order.orderStatus).withValues(alpha: 0.15),
+                    color: _statusColor(order.orderStatus).withValues(alpha: 0.12),
                     borderRadius: BorderRadius.circular(6),
                   ),
                   child: Text(
@@ -446,7 +447,7 @@ class _SupplierNewOrdersScreenState
           ),
 
           // Divider
-          const Divider(color: Color(0xFF27272A), height: 1),
+          const Divider(color: AppTheme.borderColor, height: 1),
 
           // Total + payment
           Padding(
@@ -458,7 +459,7 @@ class _SupplierNewOrdersScreenState
                 Container(
                   padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
                   decoration: BoxDecoration(
-                    color: const Color(0xFF22C55E).withValues(alpha: 0.15),
+                    color: const Color(0xFF22C55E).withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(4),
                   ),
                   child: Text(
@@ -481,17 +482,17 @@ class _SupplierNewOrdersScreenState
               margin: const EdgeInsets.fromLTRB(16, 0, 16, 8),
               padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
               decoration: BoxDecoration(
-                color: const Color(0xFF1E293B),
+                color: const Color(0xFFEFF6FF),
                 borderRadius: BorderRadius.circular(8),
-                border: Border.all(color: const Color(0xFF334155)),
+                border: Border.all(color: const Color(0xFFBFDBFE)),
               ),
               child: const Row(
                 children: [
-                  Icon(Iconsax.truck_fast, size: 16, color: Color(0xFF60A5FA)),
+                  Icon(Iconsax.truck_fast, size: 16, color: Color(0xFF3B82F6)),
                   SizedBox(width: 8),
                   Text(
                     'Assigning delivery partner...',
-                    style: TextStyle(color: Color(0xFF60A5FA), fontSize: 12, fontWeight: FontWeight.w600),
+                    style: TextStyle(color: Color(0xFF3B82F6), fontSize: 12, fontWeight: FontWeight.w600),
                   ),
                 ],
               ),
@@ -502,9 +503,9 @@ class _SupplierNewOrdersScreenState
               margin: const EdgeInsets.fromLTRB(16, 0, 16, 8),
               padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
               decoration: BoxDecoration(
-                color: const Color(0xFF052E16),
+                color: const Color(0xFFF0FDF4),
                 borderRadius: BorderRadius.circular(8),
-                border: Border.all(color: const Color(0xFF166534)),
+                border: Border.all(color: const Color(0xFFBBF7D0)),
               ),
               child: const Row(
                 children: [
@@ -524,17 +525,17 @@ class _SupplierNewOrdersScreenState
               margin: const EdgeInsets.fromLTRB(16, 0, 16, 8),
               padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
               decoration: BoxDecoration(
-                color: const Color(0xFF1E1B4B),
+                color: const Color(0xFFF5F3FF),
                 borderRadius: BorderRadius.circular(8),
-                border: Border.all(color: const Color(0xFF3730A3)),
+                border: Border.all(color: const Color(0xFFDDD6FE)),
               ),
               child: Row(
                 children: [
-                  const Icon(Iconsax.truck_tick, size: 16, color: Color(0xFF818CF8)),
+                  const Icon(Iconsax.truck_tick, size: 16, color: Color(0xFF8B5CF6)),
                   const SizedBox(width: 8),
                   Text(
                     'Picked up at ${DateFormat('h:mm a').format(order.pickedUpAt!)}',
-                    style: const TextStyle(color: Color(0xFF818CF8), fontSize: 12, fontWeight: FontWeight.w600),
+                    style: const TextStyle(color: Color(0xFF8B5CF6), fontSize: 12, fontWeight: FontWeight.w600),
                   ),
                 ],
               ),
@@ -585,7 +586,7 @@ class _SupplierNewOrdersScreenState
   }
 
   // ─────────────────────────────────────────────────────────────
-  // NEW ORDER POPUP (Zomato-style overlay)
+  // NEW ORDER POPUP (overlay)
   // ─────────────────────────────────────────────────────────────
 
   Widget _buildNewOrderPopup(Order order) {
@@ -594,17 +595,17 @@ class _SupplierNewOrdersScreenState
     final total = order.orderTotal?.total ?? order.totalPrice;
 
     return Container(
-      color: Colors.black54,
+      color: Colors.black38,
       child: Center(
         child: Container(
           width: MediaQuery.of(context).size.width * 0.9,
           constraints: const BoxConstraints(maxWidth: 420),
           decoration: BoxDecoration(
-            color: const Color(0xFF18181B),
+            color: Colors.white,
             borderRadius: BorderRadius.circular(20),
-            border: Border.all(color: const Color(0xFF27272A)),
+            border: Border.all(color: AppTheme.borderColor),
             boxShadow: [
-              BoxShadow(color: Colors.black.withValues(alpha: 0.5), blurRadius: 40, spreadRadius: 8),
+              BoxShadow(color: Colors.black.withValues(alpha: 0.15), blurRadius: 40, spreadRadius: 4),
             ],
           ),
           child: Column(
@@ -661,7 +662,7 @@ class _SupplierNewOrdersScreenState
                 ),
 
               const SizedBox(height: 12),
-              const Divider(color: Color(0xFF27272A), height: 1),
+              const Divider(color: AppTheme.borderColor, height: 1),
 
               // Items list
               Padding(
@@ -708,7 +709,7 @@ class _SupplierNewOrdersScreenState
                 ),
               ),
 
-              const Divider(color: Color(0xFF27272A), height: 1),
+              const Divider(color: AppTheme.borderColor, height: 1),
 
               // Total
               Padding(
@@ -720,7 +721,7 @@ class _SupplierNewOrdersScreenState
                     Container(
                       padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
                       decoration: BoxDecoration(
-                        color: const Color(0xFF22C55E).withValues(alpha: 0.15),
+                        color: const Color(0xFF22C55E).withValues(alpha: 0.1),
                         borderRadius: BorderRadius.circular(4),
                       ),
                       child: Text(

@@ -6,253 +6,236 @@ import '../providers/auth_provider.dart';
 import '../providers/supplier_provider.dart';
 import '../models/user.dart';
 
-class SupplierProfileScreen extends StatelessWidget {
+class SupplierProfileScreen extends StatefulWidget {
   const SupplierProfileScreen({super.key});
+
+  @override
+  State<SupplierProfileScreen> createState() => _SupplierProfileScreenState();
+}
+
+class _SupplierProfileScreenState extends State<SupplierProfileScreen> {
+  final ScrollController _scrollController = ScrollController();
+
+  @override
+  void initState() {
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
     final auth = context.watch<AuthProvider>();
-    final supplier = context.watch<SupplierProvider>();
     final user = auth.user;
     final profile = user?.supplierProfile;
+    final topPad = MediaQuery.of(context).padding.top;
 
     return Scaffold(
-      backgroundColor: const Color(0xFFF4F5F9),
-      body: CustomScrollView(
-        slivers: [
-          // Premium header
-          SliverToBoxAdapter(child: _buildHeader(context, user, profile)),
+      backgroundColor: AppTheme.scaffoldBackground,
+      body: SingleChildScrollView(
+        controller: _scrollController,
+        child: Column(
+          children: [
+                // ── Profile Hero ──
+                _buildProfileHero(context, user, profile, topPad),
 
-          // Stats row
-          SliverToBoxAdapter(
-            child: Padding(
-              padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
-              child: Row(
-                children: [
-                  Expanded(
-                    child: _StatCard(
-                      label: 'Products',
-                      value: '${supplier.totalProducts}',
-                      icon: Iconsax.box,
-                      color: const Color(0xFF6366F1),
-                    ),
-                  ),
-                  const SizedBox(width: 10),
-                  Expanded(
-                    child: _StatCard(
-                      label: 'Orders',
-                      value: '${supplier.totalOrders}',
-                      icon: Iconsax.shopping_bag,
-                      color: const Color(0xFFF59E0B),
-                    ),
-                  ),
-                  const SizedBox(width: 10),
-                  Expanded(
-                    child: _StatCard(
-                      label: 'Revenue',
-                      value: '₹${supplier.totalRevenue}',
-                      icon: Iconsax.money,
-                      color: const Color(0xFF10B981),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
+                const SizedBox(height: 16),
 
-          // Store info section
-          if (profile != null)
-            SliverToBoxAdapter(
-              child: _buildSection(
-                title: 'Store Information',
-                icon: Iconsax.shop,
-                children: [
-                  _buildInfoTile(
+                // ── Store info ──
+                if (profile != null)
+                  _buildSection(
+                    title: 'Store Information',
                     icon: Iconsax.shop,
-                    label: 'Store Name',
-                    value: profile.storeName ?? '—',
+                    children: [
+                      _buildInfoTile(
+                        icon: Iconsax.shop,
+                        label: 'Store Name',
+                        value: profile.storeName ?? '—',
+                      ),
+                      if (profile.gstin != null && profile.gstin!.isNotEmpty)
+                        _buildInfoTile(
+                          icon: Iconsax.document_text,
+                          label: 'GSTIN',
+                          value: profile.gstin!,
+                        )
+                      else if (profile.udyam != null && profile.udyam!.isNotEmpty)
+                        _buildInfoTile(
+                          icon: Iconsax.document_text,
+                          label: 'Udyam Number',
+                          value: profile.udyam!,
+                        ),
+                      _buildInfoTile(
+                        icon: Iconsax.tick_circle,
+                        label: 'Status',
+                        value: profile.isApproved ? 'Approved ✓' : 'Pending Review',
+                        valueColor:
+                            profile.isApproved ? const Color(0xFF10B981) : const Color(0xFFF59E0B),
+                      ),
+                      if (profile.supplierSince != null)
+                        _buildInfoTile(
+                          icon: Iconsax.calendar,
+                          label: 'Supplier Since',
+                          value: _formatDate(profile.supplierSince!),
+                        ),
+                    ],
                   ),
-                  if (profile.gstin != null)
-                    _buildInfoTile(
-                      icon: Iconsax.document_text,
-                      label: 'GSTIN',
-                      value: profile.gstin!,
-                    ),
-                  _buildInfoTile(
-                    icon: Iconsax.tick_circle,
-                    label: 'Status',
-                    value: profile.isApproved ? 'Approved ✓' : 'Pending Review',
-                    valueColor:
-                        profile.isApproved ? const Color(0xFF10B981) : const Color(0xFFF59E0B),
-                  ),
-                  if (profile.supplierSince != null)
-                    _buildInfoTile(
-                      icon: Iconsax.calendar,
-                      label: 'Supplier Since',
-                      value: _formatDate(profile.supplierSince!),
-                    ),
-                ],
-              ),
-            ),
 
-          // Pickup Address
-          if (profile?.pickupAddress != null)
-            SliverToBoxAdapter(
-              child: _buildSection(
-                title: 'Pickup Address',
-                icon: Iconsax.location,
-                children: [
-                  _buildInfoTile(
-                    icon: Iconsax.home,
-                    label: 'Street',
-                    value: profile!.pickupAddress!.address,
+                // ── Pickup Address ──
+                if (profile?.pickupAddress != null)
+                  _buildSection(
+                    title: 'Pickup Address',
+                    icon: Iconsax.location,
+                    children: [
+                      _buildInfoTile(
+                        icon: Iconsax.home,
+                        label: 'Street',
+                        value: profile!.pickupAddress!.address,
+                      ),
+                      _buildInfoTile(
+                        icon: Iconsax.building,
+                        label: 'City',
+                        value: profile.pickupAddress!.city,
+                      ),
+                      _buildInfoTile(
+                        icon: Iconsax.map,
+                        label: 'State',
+                        value: profile.pickupAddress!.state,
+                      ),
+                      _buildInfoTile(
+                        icon: Iconsax.location_tick,
+                        label: 'Pincode',
+                        value: profile.pickupAddress!.pincode,
+                      ),
+                    ],
                   ),
-                  _buildInfoTile(
-                    icon: Iconsax.building,
-                    label: 'City',
-                    value: profile.pickupAddress!.city,
-                  ),
-                  _buildInfoTile(
-                    icon: Iconsax.map,
-                    label: 'State',
-                    value: profile.pickupAddress!.state,
-                  ),
-                  _buildInfoTile(
-                    icon: Iconsax.location_tick,
-                    label: 'Pincode',
-                    value: profile.pickupAddress!.pincode,
-                  ),
-                ],
-              ),
-            ),
 
-          // Account Info
-          SliverToBoxAdapter(
-            child: _buildSection(
-              title: 'Account Information',
-              icon: Iconsax.user,
-              children: [
-                _buildInfoTile(
-                  icon: Iconsax.user_square,
-                  label: 'Name',
-                  value: user?.name ?? '—',
+                // ── Account Info ──
+                _buildSection(
+                  title: 'Account Information',
+                  icon: Iconsax.user,
+                  children: [
+                    _buildInfoTile(
+                      icon: Iconsax.user_square,
+                      label: 'Name',
+                      value: user?.name ?? '—',
+                    ),
+                    _buildInfoTile(
+                      icon: Iconsax.sms,
+                      label: 'Email',
+                      value: user?.email ?? '—',
+                    ),
+                    _buildInfoTile(
+                      icon: Iconsax.call,
+                      label: 'Phone',
+                      value: user?.phone ?? '—',
+                    ),
+                  ],
                 ),
-                _buildInfoTile(
-                  icon: Iconsax.sms,
-                  label: 'Email',
-                  value: user?.email ?? '—',
-                ),
-                _buildInfoTile(
-                  icon: Iconsax.call,
-                  label: 'Phone',
-                  value: user?.phone ?? '—',
+
+                // ── Bank Details ──
+                if (profile?.bankDetails != null)
+                  _buildSection(
+                    title: 'Bank Details',
+                    icon: Iconsax.bank,
+                    children: [
+                      _buildInfoTile(
+                        icon: Iconsax.user,
+                        label: 'Account Name',
+                        value: profile!.bankDetails!.accountName,
+                      ),
+                      _buildInfoTile(
+                        icon: Iconsax.card,
+                        label: 'Account Number',
+                        value: profile.bankDetails!.accountNumber,
+                        obscure: true,
+                      ),
+                      _buildInfoTile(
+                        icon: Iconsax.document,
+                        label: 'IFSC Code',
+                        value: profile.bankDetails!.ifscCode,
+                      ),
+                      _buildInfoTile(
+                        icon: Iconsax.bank,
+                        label: 'Bank Name',
+                        value: profile.bankDetails!.bankName,
+                      ),
+                    ],
+                  ),
+
+                // ── Logout ──
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(16, 8, 16, 40),
+                  child: ElevatedButton.icon(
+                    onPressed: () => _confirmLogout(context),
+                    icon: const Icon(Icons.logout, size: 18),
+                    label: const Text('Sign Out'),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: const Color(0xFFEF4444),
+                      foregroundColor: Colors.white,
+                      padding: const EdgeInsets.symmetric(vertical: 14),
+                      minimumSize: const Size(double.infinity, 48),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(14),
+                      ),
+                      textStyle: const TextStyle(
+                        fontSize: 15,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  ),
                 ),
               ],
             ),
           ),
+        );
+      }
 
-          // Bank Details
-          if (profile?.bankDetails != null)
-            SliverToBoxAdapter(
-              child: _buildSection(
-                title: 'Bank Details',
-                icon: Iconsax.bank,
-                children: [
-                  _buildInfoTile(
-                    icon: Iconsax.user,
-                    label: 'Account Name',
-                    value: profile!.bankDetails!.accountName,
-                  ),
-                  _buildInfoTile(
-                    icon: Iconsax.card,
-                    label: 'Account Number',
-                    value: profile.bankDetails!.accountNumber,
-                    obscure: true,
-                  ),
-                  _buildInfoTile(
-                    icon: Iconsax.document,
-                    label: 'IFSC Code',
-                    value: profile.bankDetails!.ifscCode,
-                  ),
-                  _buildInfoTile(
-                    icon: Iconsax.bank,
-                    label: 'Bank Name',
-                    value: profile.bankDetails!.bankName,
-                  ),
-                ],
-              ),
-            ),
+  // ── Profile Hero (always visible at top of scroll) ──
+  Widget _buildProfileHero(BuildContext context, dynamic user, SupplierProfile? profile, double topPad) {
+    final initial = (user?.name ?? 'S').isNotEmpty
+        ? user!.name.substring(0, 1).toUpperCase()
+        : 'S';
 
-          // Logout
-          SliverToBoxAdapter(
-            child: Padding(
-              padding: const EdgeInsets.fromLTRB(16, 8, 16, 40),
-              child: ElevatedButton.icon(
-                onPressed: () => _confirmLogout(context),
-                icon: const Icon(Iconsax.logout, size: 18),
-                label: const Text('Sign Out'),
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color(0xFFEF4444),
-                  foregroundColor: Colors.white,
-                  padding: const EdgeInsets.symmetric(vertical: 14),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(14),
-                  ),
-                  textStyle: const TextStyle(
-                    fontSize: 15,
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildHeader(BuildContext context, user, SupplierProfile? profile) {
     return Container(
+      width: double.infinity,
       padding: EdgeInsets.only(
-        top: MediaQuery.of(context).padding.top + 20,
+        top: topPad + 20,
         left: 20,
         right: 20,
-        bottom: 32,
+        bottom: 28,
       ),
       decoration: const BoxDecoration(
         gradient: LinearGradient(
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
-          colors: [Color(0xFF1E1E2E), Color(0xFF0A0A0B)],
+          colors: [Color(0xFF7C3AED), Color(0xFF6B21A8)],
+        ),
+        borderRadius: BorderRadius.only(
+          bottomLeft: Radius.circular(28),
+          bottomRight: Radius.circular(28),
         ),
       ),
       child: Column(
         children: [
           // Avatar
           Container(
-            width: 88,
-            height: 88,
+            width: 80,
+            height: 80,
             decoration: BoxDecoration(
               shape: BoxShape.circle,
-              gradient: const LinearGradient(
-                colors: [Color(0xFF6366F1), Color(0xFF4F46E5)],
-              ),
-              boxShadow: [
-                BoxShadow(
-                  color: const Color(0xFF6366F1).withOpacity(0.4),
-                  blurRadius: 20,
-                  offset: const Offset(0, 6),
-                ),
-              ],
+              color: Colors.white.withOpacity(0.15),
+              border: Border.all(color: Colors.white.withOpacity(0.3), width: 3),
             ),
             child: Center(
               child: Text(
-                (user?.name ?? 'S').isNotEmpty
-                    ? user!.name.substring(0, 1).toUpperCase()
-                    : 'S',
+                initial,
                 style: const TextStyle(
                   color: Colors.white,
-                  fontSize: 34,
+                  fontSize: 30,
                   fontWeight: FontWeight.bold,
                 ),
               ),
@@ -263,7 +246,7 @@ class SupplierProfileScreen extends StatelessWidget {
             user?.name ?? 'Supplier',
             style: const TextStyle(
               color: Colors.white,
-              fontSize: 22,
+              fontSize: 20,
               fontWeight: FontWeight.bold,
             ),
           ),
@@ -271,8 +254,8 @@ class SupplierProfileScreen extends StatelessWidget {
           Text(
             profile?.storeName ?? user?.email ?? '',
             style: TextStyle(
-              color: Colors.white.withOpacity(0.55),
-              fontSize: 14,
+              color: Colors.white.withOpacity(0.7),
+              fontSize: 13,
             ),
           ),
           const SizedBox(height: 12),
@@ -307,6 +290,7 @@ class SupplierProfileScreen extends StatelessWidget {
     );
   }
 
+  // ── Section card ──
   Widget _buildSection({
     required String title,
     required IconData icon,
@@ -333,7 +317,7 @@ class SupplierProfileScreen extends StatelessWidget {
               padding: const EdgeInsets.fromLTRB(16, 14, 16, 10),
               child: Row(
                 children: [
-                  Icon(icon, size: 16, color: AppTheme.primaryColor),
+                  Icon(icon, size: 16, color: AppTheme.primaryAccent),
                   const SizedBox(width: 8),
                   Text(
                     title,
@@ -355,6 +339,7 @@ class SupplierProfileScreen extends StatelessWidget {
     );
   }
 
+  // ── Info row ──
   Widget _buildInfoTile({
     required IconData icon,
     required String label,
@@ -370,7 +355,7 @@ class SupplierProfileScreen extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
       child: Row(
         children: [
-          Icon(icon, size: 18, color: Colors.grey.shade400),
+          Icon(icon, size: 18, color: AppTheme.textHint),
           const SizedBox(width: 12),
           Expanded(
             child: Column(
@@ -380,7 +365,7 @@ class SupplierProfileScreen extends StatelessWidget {
                   label,
                   style: TextStyle(
                     fontSize: 11,
-                    color: Colors.grey.shade500,
+                    color: AppTheme.textSecondary,
                     fontWeight: FontWeight.w500,
                   ),
                 ),
@@ -435,64 +420,5 @@ class SupplierProfileScreen extends StatelessWidget {
       'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'
     ];
     return '${date.day} ${months[date.month - 1]} ${date.year}';
-  }
-}
-
-class _StatCard extends StatelessWidget {
-  final String label;
-  final String value;
-  final IconData icon;
-  final Color color;
-
-  const _StatCard({
-    required this.label,
-    required this.value,
-    required this.icon,
-    required this.color,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.all(14),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(16),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.04),
-            blurRadius: 10,
-            offset: const Offset(0, 4),
-          ),
-        ],
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Container(
-            padding: const EdgeInsets.all(6),
-            decoration: BoxDecoration(
-              color: color.withOpacity(0.1),
-              borderRadius: BorderRadius.circular(8),
-            ),
-            child: Icon(icon, color: color, size: 16),
-          ),
-          const SizedBox(height: 10),
-          Text(
-            value,
-            style: const TextStyle(
-              fontSize: 16,
-              fontWeight: FontWeight.bold,
-              color: AppTheme.textPrimary,
-            ),
-          ),
-          const SizedBox(height: 2),
-          Text(
-            label,
-            style: TextStyle(fontSize: 10, color: Colors.grey.shade500),
-          ),
-        ],
-      ),
-    );
   }
 }

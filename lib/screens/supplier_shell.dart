@@ -189,9 +189,16 @@ class _SupplierShellState extends State<SupplierShell>
 
   Widget _buildBottomNav() {
     return Container(
-      decoration: const BoxDecoration(
-        color: AppTheme.cardBackground,
-        border: Border(top: BorderSide(color: Color(0xFF27272A), width: 1)),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        border: const Border(top: BorderSide(color: AppTheme.borderColor, width: 1)),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.04),
+            blurRadius: 10,
+            offset: const Offset(0, -2),
+          ),
+        ],
       ),
       child: SafeArea(
         child: Padding(
@@ -248,10 +255,10 @@ class _SupplierShellState extends State<SupplierShell>
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 200),
         curve: Curves.easeOutCubic,
-        padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 8),
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
         decoration: BoxDecoration(
           color: isActive
-              ? AppTheme.primaryColor.withOpacity(0.15)
+              ? AppTheme.primaryColor.withOpacity(0.08)
               : Colors.transparent,
           borderRadius: BorderRadius.circular(12),
         ),
@@ -264,7 +271,7 @@ class _SupplierShellState extends State<SupplierShell>
                 Icon(
                   isActive ? activeIcon : icon,
                   color: isActive ? AppTheme.primaryAccent : AppTheme.textSecondary,
-                  size: 24,
+                  size: 20,
                 ),
                 if (badge > 0)
                   Positioned(
@@ -273,9 +280,9 @@ class _SupplierShellState extends State<SupplierShell>
                     child: Container(
                       padding: const EdgeInsets.all(4),
                       decoration: BoxDecoration(
-                        color: AppTheme.errorColor, // Zepto style urgent red badge
+                        color: AppTheme.errorColor,
                         shape: BoxShape.circle,
-                        border: Border.all(color: AppTheme.cardBackground, width: 2),
+                        border: Border.all(color: Colors.white, width: 2),
                       ),
                       constraints: const BoxConstraints(minWidth: 20, minHeight: 20),
                       child: Text(
@@ -360,15 +367,11 @@ class _NewOrderPopupCard extends StatelessWidget {
         child: Material(
           elevation: 16,
           borderRadius: BorderRadius.circular(20),
-          shadowColor: Colors.black.withOpacity(0.3),
+          shadowColor: Colors.black.withOpacity(0.15),
           child: Container(
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(20),
-              gradient: const LinearGradient(
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-                colors: [Color(0xFF1E1E2E), Color(0xFF12122A)],
-              ),
+              color: Colors.white,
             ),
             child: Column(
               mainAxisSize: MainAxisSize.min,
@@ -415,13 +418,13 @@ class _NewOrderPopupCard extends StatelessWidget {
                           Container(
                             padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
                             decoration: BoxDecoration(
-                              color: Colors.white.withOpacity(0.1),
+                              color: AppTheme.surfaceColor,
                               borderRadius: BorderRadius.circular(8),
                             ),
                             child: Text(
                               'ORDER #$orderId',
                               style: const TextStyle(
-                                color: Colors.white,
+                                color: AppTheme.textPrimary,
                                 fontWeight: FontWeight.w800,
                                 fontSize: 13,
                                 letterSpacing: 0.5,
@@ -432,7 +435,7 @@ class _NewOrderPopupCard extends StatelessWidget {
                           Container(
                             padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                             decoration: BoxDecoration(
-                              color: const Color(0xFF10B981).withOpacity(0.2),
+                              color: const Color(0xFF10B981).withOpacity(0.1),
                               borderRadius: BorderRadius.circular(6),
                             ),
                             child: Text(
@@ -457,7 +460,7 @@ class _NewOrderPopupCard extends StatelessWidget {
                               width: 36,
                               height: 36,
                               decoration: BoxDecoration(
-                                color: Colors.white.withOpacity(0.07),
+                                color: AppTheme.surfaceColor,
                                 borderRadius: BorderRadius.circular(8),
                                 image: item.productImage.isNotEmpty
                                     ? DecorationImage(
@@ -468,7 +471,7 @@ class _NewOrderPopupCard extends StatelessWidget {
                               ),
                               child: item.productImage.isEmpty
                                   ? const Icon(Icons.inventory_2_outlined,
-                                      color: Colors.white38, size: 18)
+                                      color: AppTheme.textHint, size: 18)
                                   : null,
                             ),
                             const SizedBox(width: 10),
@@ -476,7 +479,7 @@ class _NewOrderPopupCard extends StatelessWidget {
                               child: Text(
                                 item.productName,
                                 style: const TextStyle(
-                                  color: Colors.white,
+                                  color: AppTheme.textPrimary,
                                   fontSize: 13,
                                   fontWeight: FontWeight.w600,
                                 ),
@@ -487,7 +490,7 @@ class _NewOrderPopupCard extends StatelessWidget {
                             Text(
                               'x${item.quantity}',
                               style: TextStyle(
-                                color: Colors.white.withOpacity(0.6),
+                                color: AppTheme.textSecondary,
                                 fontSize: 12,
                               ),
                             ),
@@ -495,7 +498,7 @@ class _NewOrderPopupCard extends StatelessWidget {
                             Text(
                               '₹${item.price.toInt()}',
                               style: const TextStyle(
-                                color: Colors.white,
+                                color: AppTheme.textPrimary,
                                 fontSize: 13,
                                 fontWeight: FontWeight.bold,
                               ),
@@ -510,13 +513,13 @@ class _NewOrderPopupCard extends StatelessWidget {
                           child: Text(
                             '+${order.items.length - 3} more items',
                             style: TextStyle(
-                              color: Colors.white.withOpacity(0.5),
+                              color: AppTheme.textSecondary,
                               fontSize: 12,
                             ),
                           ),
                         ),
 
-                      Divider(color: Colors.white.withOpacity(0.1)),
+                      Divider(color: AppTheme.borderColor),
                       const SizedBox(height: 4),
 
                       // Total row
@@ -526,14 +529,14 @@ class _NewOrderPopupCard extends StatelessWidget {
                           Text(
                             'Total Amount',
                             style: TextStyle(
-                              color: Colors.white.withOpacity(0.6),
+                              color: AppTheme.textSecondary,
                               fontSize: 13,
                             ),
                           ),
                           Text(
                             '₹${order.totalPrice.toInt()}',
                             style: const TextStyle(
-                              color: Colors.white,
+                              color: AppTheme.textPrimary,
                               fontSize: 18,
                               fontWeight: FontWeight.bold,
                             ),
@@ -545,14 +548,14 @@ class _NewOrderPopupCard extends StatelessWidget {
                         const SizedBox(height: 6),
                         Row(
                           children: [
-                            const Icon(Icons.location_on_outlined,
-                                color: Colors.white38, size: 14),
+                            Icon(Icons.location_on_outlined,
+                                color: AppTheme.textHint, size: 14),
                             const SizedBox(width: 4),
                             Expanded(
                               child: Text(
                                 '${order.shippingAddress!.street}, ${order.shippingAddress!.city}',
                                 style: TextStyle(
-                                  color: Colors.white.withOpacity(0.5),
+                                  color: AppTheme.textSecondary,
                                   fontSize: 12,
                                 ),
                                 maxLines: 1,
@@ -572,8 +575,8 @@ class _NewOrderPopupCard extends StatelessWidget {
                             child: OutlinedButton(
                               onPressed: onDismiss,
                               style: OutlinedButton.styleFrom(
-                                foregroundColor: Colors.white70,
-                                side: BorderSide(color: Colors.white.withOpacity(0.2)),
+                                foregroundColor: AppTheme.textSecondary,
+                                side: BorderSide(color: AppTheme.borderColor),
                                 padding: const EdgeInsets.symmetric(vertical: 11),
                                 shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(12),

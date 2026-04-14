@@ -39,10 +39,10 @@ class _SupplierFinanceScreenState extends State<SupplierFinanceScreen> {
         ),
       ),
       body: provider.isLoading
-          ? const Center(child: CircularProgressIndicator(color: AppTheme.primaryColor))
+          ? const Center(child: CircularProgressIndicator(color: AppTheme.primaryAccent))
           : RefreshIndicator(
               onRefresh: () async => await provider.fetchFinanceDetails(),
-              color: AppTheme.primaryColor,
+              color: AppTheme.primaryAccent,
               child: provider.error != null
                   ? SingleChildScrollView(
                       physics: const AlwaysScrollableScrollPhysics(),
@@ -52,9 +52,9 @@ class _SupplierFinanceScreenState extends State<SupplierFinanceScreen> {
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            const Icon(Icons.error_outline, size: 48, color: Colors.red),
+                            const Icon(Icons.error_outline, size: 48, color: AppTheme.errorColor),
                             const SizedBox(height: 16),
-                            Text('Failed to load finance data', style: TextStyle(color: Colors.grey.shade600)),
+                            Text('Failed to load finance data', style: TextStyle(color: AppTheme.textSecondary)),
                           ],
                         ),
                       ),
@@ -82,13 +82,13 @@ class _SupplierFinanceScreenState extends State<SupplierFinanceScreen> {
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        color: const Color(0xFF1F2937),
+        gradient: AppTheme.activeOrderGradient,
         borderRadius: BorderRadius.circular(20),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.1),
-            blurRadius: 10,
-            offset: const Offset(0, 4),
+            color: AppTheme.primaryColor.withOpacity(0.25),
+            blurRadius: 16,
+            offset: const Offset(0, 6),
           ),
         ],
       ),
@@ -98,7 +98,7 @@ class _SupplierFinanceScreenState extends State<SupplierFinanceScreen> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text('Total Earnings', style: TextStyle(color: Colors.grey.shade300, fontSize: 14)),
+              Text('Total Earnings', style: TextStyle(color: Colors.white.withOpacity(0.8), fontSize: 14)),
               const Icon(Iconsax.wallet_2, color: Colors.white, size: 20),
             ],
           ),
@@ -114,13 +114,13 @@ class _SupplierFinanceScreenState extends State<SupplierFinanceScreen> {
                 child: Container(
                   padding: const EdgeInsets.all(12),
                   decoration: BoxDecoration(
-                    color: Colors.white.withOpacity(0.1),
+                    color: Colors.white.withOpacity(0.15),
                     borderRadius: BorderRadius.circular(12),
                   ),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text('Pending Payouts', style: TextStyle(color: Colors.grey.shade300, fontSize: 12)),
+                      Text('Pending Payouts', style: TextStyle(color: Colors.white.withOpacity(0.8), fontSize: 12)),
                       const SizedBox(height: 4),
                       Text('₹${pendingPayouts.toStringAsFixed(0)}', style: const TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold)),
                     ],
@@ -132,13 +132,13 @@ class _SupplierFinanceScreenState extends State<SupplierFinanceScreen> {
                 child: Container(
                   padding: const EdgeInsets.all(12),
                   decoration: BoxDecoration(
-                    color: Colors.white.withOpacity(0.1),
+                    color: Colors.white.withOpacity(0.15),
                     borderRadius: BorderRadius.circular(12),
                   ),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text('Settled', style: TextStyle(color: Colors.grey.shade300, fontSize: 12)),
+                      Text('Settled', style: TextStyle(color: Colors.white.withOpacity(0.8), fontSize: 12)),
                       const SizedBox(height: 4),
                       Text('₹${(totalEarnings - pendingPayouts).toStringAsFixed(0)}', style: const TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold)),
                     ],
@@ -171,7 +171,7 @@ class _SupplierFinanceScreenState extends State<SupplierFinanceScreen> {
           Center(
             child: Padding(
               padding: const EdgeInsets.all(32.0),
-              child: Text('No transactions yet', style: TextStyle(color: Colors.grey.shade500)),
+              child: Text('No transactions yet', style: TextStyle(color: AppTheme.textSecondary)),
             ),
           )
         else
@@ -187,7 +187,8 @@ class _SupplierFinanceScreenState extends State<SupplierFinanceScreen> {
               decoration: BoxDecoration(
                 color: Colors.white,
                 borderRadius: BorderRadius.circular(16),
-                border: Border.all(color: Colors.grey.shade200),
+                border: Border.all(color: AppTheme.borderColor),
+                boxShadow: AppTheme.softShadow,
               ),
               child: Row(
                 children: [
@@ -195,28 +196,28 @@ class _SupplierFinanceScreenState extends State<SupplierFinanceScreen> {
                     width: 40,
                     height: 40,
                     decoration: BoxDecoration(
-                      color: Colors.green.shade50,
+                      color: const Color(0xFFF0FDF4),
                       shape: BoxShape.circle,
                     ),
-                    child: Icon(Icons.call_received, color: Colors.green.shade600, size: 20),
+                    child: const Icon(Icons.call_received, color: Color(0xFF22C55E), size: 20),
                   ),
                   const SizedBox(width: 16),
                   Expanded(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text('Order #$shortId', style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14)),
+                        Text('Order #$shortId', style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14, color: AppTheme.textPrimary)),
                         const SizedBox(height: 4),
-                        Text(DateFormat('dd MMM yyyy, hh:mm a').format(date), style: TextStyle(color: Colors.grey.shade500, fontSize: 12)),
+                        Text(DateFormat('dd MMM yyyy, hh:mm a').format(date), style: TextStyle(color: AppTheme.textSecondary, fontSize: 12)),
                       ],
                     ),
                   ),
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.end,
                     children: [
-                      Text('+₹${amount.toStringAsFixed(0)}', style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16, color: Colors.green)),
+                      Text('+₹${amount.toStringAsFixed(0)}', style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16, color: Color(0xFF22C55E))),
                       const SizedBox(height: 4),
-                      Text('Completed', style: TextStyle(color: Colors.green.shade600, fontSize: 12, fontWeight: FontWeight.w600)),
+                      Text('Completed', style: TextStyle(color: const Color(0xFF22C55E), fontSize: 12, fontWeight: FontWeight.w600)),
                     ],
                   )
                 ],

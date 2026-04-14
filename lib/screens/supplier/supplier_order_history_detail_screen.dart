@@ -23,10 +23,11 @@ class SupplierOrderHistoryDetailScreen extends StatelessWidget {
     return Scaffold(
       backgroundColor: AppTheme.scaffoldBackground,
       appBar: AppBar(
-        title: Text('Order #$orderId', style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+        title: Text('Order #$orderId', style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: AppTheme.textPrimary)),
         backgroundColor: Colors.white,
         elevation: 0,
         centerTitle: true,
+        iconTheme: const IconThemeData(color: AppTheme.textPrimary),
       ),
       body: SingleChildScrollView(
         child: Column(
@@ -34,7 +35,7 @@ class SupplierOrderHistoryDetailScreen extends StatelessWidget {
             // Status Header
             Container(
               width: double.infinity,
-              color: isDelivered ? const Color(0xFF10B981) : (isCancelled ? Colors.red.shade500 : Colors.orange),
+              color: isDelivered ? const Color(0xFF10B981) : (isCancelled ? const Color(0xFFEF4444) : const Color(0xFFF59E0B)),
               padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 20),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -69,7 +70,8 @@ class SupplierOrderHistoryDetailScreen extends StatelessWidget {
                     decoration: BoxDecoration(
                       color: Colors.white,
                       borderRadius: BorderRadius.circular(16),
-                      border: Border.all(color: Colors.grey.shade200),
+                      border: Border.all(color: AppTheme.borderColor),
+                      boxShadow: AppTheme.softShadow,
                     ),
                     padding: const EdgeInsets.all(16),
                     child: Column(
@@ -83,9 +85,9 @@ class SupplierOrderHistoryDetailScreen extends StatelessWidget {
                                 width: 24,
                                 height: 24,
                                 decoration: BoxDecoration(
-                                  color: Colors.grey.shade100,
+                                  color: AppTheme.surfaceColor,
                                   borderRadius: BorderRadius.circular(6),
-                                  border: Border.all(color: Colors.grey.shade300),
+                                  border: Border.all(color: AppTheme.borderColor),
                                 ),
                                 alignment: Alignment.center,
                                 child: Text('${item.quantity}x', style: const TextStyle(fontSize: 11, fontWeight: FontWeight.bold, color: AppTheme.primaryColor)),
@@ -95,13 +97,13 @@ class SupplierOrderHistoryDetailScreen extends StatelessWidget {
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    Text(item.productName, style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 14)),
+                                    Text(item.productName, style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 14, color: AppTheme.textPrimary)),
                                     if (item.variant != null && item.variant!.isNotEmpty)
-                                      Text(item.variant!, style: TextStyle(color: Colors.grey.shade500, fontSize: 12)),
+                                      Text(item.variant!, style: TextStyle(color: AppTheme.textSecondary, fontSize: 12)),
                                   ],
                                 ),
                               ),
-                              Text('₹${(item.price * item.quantity).toStringAsFixed(0)}', style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 14)),
+                              Text('₹${(item.price * item.quantity).toStringAsFixed(0)}', style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 14, color: AppTheme.textPrimary)),
                             ],
                           ),
                         );
@@ -119,7 +121,8 @@ class SupplierOrderHistoryDetailScreen extends StatelessWidget {
                     decoration: BoxDecoration(
                       color: Colors.white,
                       borderRadius: BorderRadius.circular(16),
-                      border: Border.all(color: Colors.grey.shade200),
+                      border: Border.all(color: AppTheme.borderColor),
+                      boxShadow: AppTheme.softShadow,
                     ),
                     padding: const EdgeInsets.all(16),
                     child: Column(
@@ -127,29 +130,29 @@ class SupplierOrderHistoryDetailScreen extends StatelessWidget {
                       children: [
                         Row(
                           children: [
-                            const Icon(Icons.person_outline, size: 18, color: Colors.grey),
+                            const Icon(Icons.person_outline, size: 18, color: AppTheme.textSecondary),
                             const SizedBox(width: 8),
-                            Text(order.customerName ?? 'Unknown', style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 14)),
+                            Text(order.customerName ?? 'Unknown', style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 14, color: AppTheme.textPrimary)),
                           ],
                         ),
                         const SizedBox(height: 12),
                         Row(
                           children: [
-                            const Icon(Icons.phone_outlined, size: 18, color: Colors.grey),
+                            const Icon(Icons.phone_outlined, size: 18, color: AppTheme.textSecondary),
                             const SizedBox(width: 8),
-                            Text(order.shippingAddress?.phone ?? 'Unknown', style: const TextStyle(fontSize: 14)),
+                            Text(order.shippingAddress?.phone ?? 'Unknown', style: const TextStyle(fontSize: 14, color: AppTheme.textPrimary)),
                           ],
                         ),
                         const SizedBox(height: 12),
                         Row(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            const Icon(Icons.location_on_outlined, size: 18, color: Colors.grey),
+                            const Icon(Icons.location_on_outlined, size: 18, color: AppTheme.textSecondary),
                             const SizedBox(width: 8),
                             Expanded(
                               child: Text(
                                 '${order.shippingAddress?.street ?? ''}, ${order.shippingAddress?.city ?? ''}, ${order.shippingAddress?.state ?? ''} ${order.shippingAddress?.postalCode ?? ''}'.trim(),
-                                style: const TextStyle(fontSize: 13, height: 1.4),
+                                style: const TextStyle(fontSize: 13, height: 1.4, color: AppTheme.textPrimary),
                               ),
                             ),
                           ],
@@ -182,7 +185,8 @@ class SupplierOrderHistoryDetailScreen extends StatelessWidget {
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: Colors.grey.shade200),
+        border: Border.all(color: AppTheme.borderColor),
+        boxShadow: AppTheme.softShadow,
       ),
       padding: const EdgeInsets.all(20),
       child: Column(
@@ -232,7 +236,7 @@ class SupplierOrderHistoryDetailScreen extends StatelessWidget {
                   Container(
                     width: 2,
                     height: 16,
-                    color: isCompleted ? const Color(0xFF10B981) : Colors.grey.shade300,
+                    color: isCompleted ? const Color(0xFF10B981) : AppTheme.borderColor,
                   ),
                 Container(
                   width: 12,
@@ -242,7 +246,7 @@ class SupplierOrderHistoryDetailScreen extends StatelessWidget {
                     color: isCompleted ? const Color(0xFF10B981) : Colors.white,
                     shape: BoxShape.circle,
                     border: Border.all(
-                      color: isCompleted ? const Color(0xFF10B981) : Colors.grey.shade300,
+                      color: isCompleted ? const Color(0xFF10B981) : AppTheme.borderColor,
                       width: 2,
                     ),
                   ),
@@ -251,7 +255,7 @@ class SupplierOrderHistoryDetailScreen extends StatelessWidget {
                   Expanded(
                     child: Container(
                       width: 2,
-                      color: isCompleted ? const Color(0xFF10B981) : Colors.grey.shade300,
+                      color: isCompleted ? const Color(0xFF10B981) : AppTheme.borderColor,
                     ),
                   ),
               ],
@@ -268,7 +272,7 @@ class SupplierOrderHistoryDetailScreen extends StatelessWidget {
                     title,
                     style: TextStyle(
                       fontWeight: isCompleted ? FontWeight.bold : FontWeight.normal,
-                      color: isCompleted ? AppTheme.textPrimary : Colors.grey.shade500,
+                      color: isCompleted ? AppTheme.textPrimary : AppTheme.textHint,
                       fontSize: 14,
                     ),
                   ),
@@ -277,7 +281,7 @@ class SupplierOrderHistoryDetailScreen extends StatelessWidget {
                     Text(
                       DateFormat('hh:mm a').format(time),
                       style: TextStyle(
-                        color: Colors.grey.shade500,
+                        color: AppTheme.textSecondary,
                         fontSize: 12,
                       ),
                     ),

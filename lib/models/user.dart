@@ -3,6 +3,7 @@ class SupplierProfile {
   final String? gstin;
   final PickupAddress? pickupAddress;
   final BankDetails? bankDetails;
+  final String? udyam;
   final bool isApproved;
   final DateTime? supplierSince;
 
@@ -11,6 +12,7 @@ class SupplierProfile {
     this.gstin,
     this.pickupAddress,
     this.bankDetails,
+    this.udyam,
     this.isApproved = false,
     this.supplierSince,
   });
@@ -19,6 +21,7 @@ class SupplierProfile {
     return SupplierProfile(
       storeName: json['storeName'],
       gstin: json['gstin'],
+      udyam: json['udyam'] ?? json['udyamRegistration'],
       pickupAddress: json['pickupAddress'] != null
           ? PickupAddress.fromJson(json['pickupAddress'])
           : null,
@@ -36,6 +39,7 @@ class SupplierProfile {
     return {
       'storeName': storeName,
       'gstin': gstin,
+      'udyam': udyam,
       if (pickupAddress != null) 'pickupAddress': pickupAddress!.toJson(),
       if (bankDetails != null) 'bankDetails': bankDetails!.toJson(),
     };

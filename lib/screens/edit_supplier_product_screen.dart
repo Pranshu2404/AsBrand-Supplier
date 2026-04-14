@@ -497,7 +497,7 @@ class _EditSupplierProductScreenState extends State<EditSupplierProductScreen> {
     final catProvider = context.watch<CategoryProvider>();
 
     return Scaffold(
-      backgroundColor: const Color(0xFFF8F9FA),
+      backgroundColor: AppTheme.scaffoldBackground,
       appBar: AppBar(
         backgroundColor: Colors.white,
         surfaceTintColor: Colors.transparent,

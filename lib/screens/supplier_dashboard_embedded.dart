@@ -42,7 +42,7 @@ class _SupplierDashboardScreenEmbeddedState
     return Scaffold(
       backgroundColor: AppTheme.scaffoldBackground,
       appBar: AppBar(
-        backgroundColor: AppTheme.scaffoldBackground,
+        backgroundColor: Colors.white,
         surfaceTintColor: Colors.transparent,
         elevation: 0,
         automaticallyImplyLeading: false,
@@ -122,7 +122,7 @@ class _SupplierDashboardScreenEmbeddedState
     return RefreshIndicator(
       onRefresh: () => supplier.fetchDashboard(),
       color: AppTheme.primaryAccent,
-      backgroundColor: AppTheme.surfaceColor,
+      backgroundColor: Colors.white,
       child: SingleChildScrollView(
         physics: const AlwaysScrollableScrollPhysics(),
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
@@ -136,7 +136,13 @@ class _SupplierDashboardScreenEmbeddedState
               decoration: BoxDecoration(
                 gradient: AppTheme.activeOrderGradient,
                 borderRadius: BorderRadius.circular(20),
-                boxShadow: AppTheme.cardShadow,
+                boxShadow: [
+                  BoxShadow(
+                    color: AppTheme.primaryColor.withOpacity(0.25),
+                    blurRadius: 16,
+                    offset: const Offset(0, 6),
+                  ),
+                ],
               ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -146,7 +152,7 @@ class _SupplierDashboardScreenEmbeddedState
                       Container(
                         padding: const EdgeInsets.all(10),
                         decoration: BoxDecoration(
-                          color: Colors.white.withOpacity(0.1),
+                          color: Colors.white.withOpacity(0.15),
                           borderRadius: BorderRadius.circular(12),
                         ),
                         child: const Icon(Iconsax.shop, color: Colors.white, size: 24),
@@ -205,26 +211,26 @@ class _SupplierDashboardScreenEmbeddedState
                                   color: Colors.white)),
                         ],
                       ),
-                      ElevatedButton(
-                        onPressed: () {
-                          Navigator.push(context, MaterialPageRoute(builder: (_) => const SupplierFinanceScreen()));
-                        },
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.white.withOpacity(0.15),
-                          foregroundColor: Colors.white,
-                          elevation: 0,
-                          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-                        ),
-                        child: const Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Text('View Payouts', style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold)),
-                            SizedBox(width: 4),
-                            Icon(Icons.arrow_forward_ios, size: 12),
-                          ],
-                        ),
-                      ),
+                      // ElevatedButton(
+                      //   onPressed: () {
+                      //     Navigator.push(context, MaterialPageRoute(builder: (_) => const SupplierFinanceScreen()));
+                      //   },
+                      //   style: ElevatedButton.styleFrom(
+                      //     backgroundColor: Colors.white.withOpacity(0.2),
+                      //     foregroundColor: Colors.white,
+                      //     elevation: 0,
+                      //     padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                      //     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                      //   ),
+                      //   child: const Row(
+                      //     mainAxisSize: MainAxisSize.min,
+                      //     children: [
+                      //       Text('View Payouts', style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold)),
+                      //       SizedBox(width: 4),
+                      //       Icon(Icons.arrow_forward_ios, size: 12),
+                      //     ],
+                      //   ),
+                      // ),
                     ],
                   ),
                 ],
@@ -286,7 +292,7 @@ class _SupplierDashboardScreenEmbeddedState
             ),
             const SizedBox(height: 24),
 
-            // Quick Actions (Zepto style solid un-raised cards)
+            // Quick Actions
             const Text('QUICK ACTIONS',
                 style: TextStyle(
                     fontSize: 12,
@@ -334,12 +340,13 @@ class _SupplierDashboardScreenEmbeddedState
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: AppTheme.cardBackground,
+        color: Colors.white,
         borderRadius: BorderRadius.circular(16),
         border: Border.all(
-          color: isAlert ? color.withOpacity(0.5) : const Color(0xFF27272A),
+          color: isAlert ? color.withOpacity(0.4) : AppTheme.borderColor,
           width: isAlert ? 1.5 : 1.0,
         ),
+        boxShadow: AppTheme.softShadow,
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -350,7 +357,7 @@ class _SupplierDashboardScreenEmbeddedState
               Container(
                 padding: const EdgeInsets.all(8),
                 decoration: BoxDecoration(
-                  color: color.withOpacity(0.15),
+                  color: color.withOpacity(0.1),
                   borderRadius: BorderRadius.circular(10),
                 ),
                 child: Icon(icon, color: color, size: 18),
@@ -388,9 +395,10 @@ class _SupplierDashboardScreenEmbeddedState
       child: Container(
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
-          color: AppTheme.cardBackground,
+          color: Colors.white,
           borderRadius: BorderRadius.circular(16),
-          border: Border.all(color: const Color(0xFF27272A)),
+          border: Border.all(color: AppTheme.borderColor),
+          boxShadow: AppTheme.softShadow,
         ),
         child: Row(
           children: [
@@ -400,7 +408,7 @@ class _SupplierDashboardScreenEmbeddedState
                 color: AppTheme.surfaceColor,
                 borderRadius: BorderRadius.circular(12),
               ),
-              child: Icon(icon, color: AppTheme.textPrimary, size: 22),
+              child: Icon(icon, color: AppTheme.primaryAccent, size: 22),
             ),
             const SizedBox(width: 16),
             Expanded(

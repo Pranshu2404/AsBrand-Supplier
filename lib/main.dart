@@ -16,6 +16,7 @@ void main() async {
     statusBarColor: Colors.transparent,
     statusBarIconBrightness: Brightness.dark,
     systemNavigationBarColor: Colors.white,
+    systemNavigationBarIconBrightness: Brightness.dark,
   ));
 
   runApp(const AsBrandSupplierApp());
@@ -36,7 +37,7 @@ class AsBrandSupplierApp extends StatelessWidget {
       child: MaterialApp(
         title: 'AsBrand Supplier',
         debugShowCheckedModeBanner: false,
-        theme: AppTheme.darkTheme,
+        theme: AppTheme.lightTheme,
         home: const _AppRoot(),
       ),
     );
@@ -87,7 +88,7 @@ class _SplashScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFF0A0A0B),
+      backgroundColor: Colors.white,
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -97,14 +98,14 @@ class _SplashScreen extends StatelessWidget {
               height: 84,
               decoration: BoxDecoration(
                 gradient: const LinearGradient(
-                  colors: [Color(0xFF6366F1), Color(0xFF4F46E5)],
+                  colors: [Color(0xFF9333EA), Color(0xFF6B21A8)],
                   begin: Alignment.topLeft,
                   end: Alignment.bottomRight,
                 ),
                 borderRadius: BorderRadius.circular(24),
                 boxShadow: [
                   BoxShadow(
-                    color: const Color(0xFF6366F1).withOpacity(0.4),
+                    color: const Color(0xFF9333EA).withOpacity(0.3),
                     blurRadius: 24,
                     offset: const Offset(0, 8),
                   ),
@@ -118,7 +119,7 @@ class _SplashScreen extends StatelessWidget {
               style: TextStyle(
                 fontSize: 20,
                 fontWeight: FontWeight.bold,
-                color: Colors.white,
+                color: AppTheme.textPrimary,
                 letterSpacing: -0.5,
               ),
             ),
@@ -127,7 +128,7 @@ class _SplashScreen extends StatelessWidget {
               width: 24,
               height: 24,
               child: CircularProgressIndicator(
-                color: Color(0xFF6366F1),
+                color: Color(0xFF9333EA),
                 strokeWidth: 2.5,
               ),
             ),

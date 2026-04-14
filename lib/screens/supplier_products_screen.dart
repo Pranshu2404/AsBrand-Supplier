@@ -30,7 +30,7 @@ class _SupplierProductsScreenState extends State<SupplierProductsScreen> {
     return Scaffold(
       backgroundColor: AppTheme.scaffoldBackground,
       appBar: AppBar(
-        backgroundColor: AppTheme.scaffoldBackground,
+        backgroundColor: Colors.white,
         surfaceTintColor: Colors.transparent,
         elevation: 0,
         leading: IconButton(
@@ -59,7 +59,7 @@ class _SupplierProductsScreenState extends State<SupplierProductsScreen> {
                     children: [
                       Container(
                         padding: const EdgeInsets.all(24),
-                        decoration: const BoxDecoration(
+                        decoration: BoxDecoration(
                           color: AppTheme.surfaceColor,
                           shape: BoxShape.circle,
                         ),
@@ -76,7 +76,7 @@ class _SupplierProductsScreenState extends State<SupplierProductsScreen> {
               : RefreshIndicator(
                   onRefresh: () => supplier.fetchProducts(),
                   color: AppTheme.primaryAccent,
-                  backgroundColor: AppTheme.surfaceColor,
+                  backgroundColor: Colors.white,
                   child: ListView.builder(
                     padding: const EdgeInsets.all(16),
                     itemCount: supplier.products.length,
@@ -92,9 +92,10 @@ class _SupplierProductsScreenState extends State<SupplierProductsScreen> {
     return Container(
       margin: const EdgeInsets.only(bottom: 12),
       decoration: BoxDecoration(
-        color: AppTheme.cardBackground,
+        color: Colors.white,
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: const Color(0xFF27272A)),
+        border: Border.all(color: AppTheme.borderColor),
+        boxShadow: AppTheme.softShadow,
       ),
       child: Padding(
         padding: const EdgeInsets.all(14),
@@ -142,7 +143,7 @@ class _SupplierProductsScreenState extends State<SupplierProductsScreen> {
                       Container(
                         padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                         decoration: BoxDecoration(
-                          color: product.quantity > 0 ? AppTheme.successGreen.withOpacity(0.15) : AppTheme.errorColor.withOpacity(0.15),
+                          color: product.quantity > 0 ? AppTheme.successGreen.withOpacity(0.1) : AppTheme.errorColor.withOpacity(0.1),
                           borderRadius: BorderRadius.circular(6),
                         ),
                         child: Text(
@@ -188,10 +189,9 @@ class _SupplierProductsScreenState extends State<SupplierProductsScreen> {
     showDialog(
       context: context,
       builder: (ctx) => AlertDialog(
-        backgroundColor: AppTheme.cardBackground,
+        backgroundColor: Colors.white,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(16),
-          side: const BorderSide(color: Color(0xFF27272A)),
         ),
         title: const Text('Delete SKU?', style: TextStyle(color: AppTheme.textPrimary, fontWeight: FontWeight.bold)),
         content: Text('Are you sure you want to delete "${product.name}"?', 

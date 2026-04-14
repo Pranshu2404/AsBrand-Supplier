@@ -60,12 +60,13 @@ class _SupplierOrderHistoryScreenState extends State<SupplierOrderHistoryScreen>
             child: TextField(
               controller: _searchController,
               onChanged: (val) => setState(() => _searchQuery = val),
+              style: const TextStyle(color: AppTheme.textPrimary),
               decoration: InputDecoration(
                 hintText: 'Search by Order ID...',
-                hintStyle: TextStyle(color: Colors.grey.shade400, fontSize: 14),
-                prefixIcon: const Icon(Iconsax.search_normal, color: Colors.grey, size: 18),
+                hintStyle: TextStyle(color: AppTheme.textHint, fontSize: 14),
+                prefixIcon: const Icon(Iconsax.search_normal, color: AppTheme.textHint, size: 18),
                 filled: true,
-                fillColor: Colors.grey.shade100,
+                fillColor: AppTheme.surfaceColor,
                 contentPadding: const EdgeInsets.symmetric(vertical: 0, horizontal: 16),
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(12),
@@ -82,15 +83,15 @@ class _SupplierOrderHistoryScreenState extends State<SupplierOrderHistoryScreen>
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Icon(Iconsax.document_text_1, size: 60, color: Colors.grey.shade300),
+                        Icon(Iconsax.document_text_1, size: 60, color: AppTheme.textHint),
                         const SizedBox(height: 16),
-                        Text('No past orders found', style: TextStyle(color: Colors.grey.shade500, fontSize: 16)),
+                        Text('No past orders found', style: TextStyle(color: AppTheme.textSecondary, fontSize: 16)),
                       ],
                     ),
                   )
                 : RefreshIndicator(
                     onRefresh: () async => await provider.fetchOrders(),
-                    color: AppTheme.primaryColor,
+                    color: AppTheme.primaryAccent,
                     child: ListView.separated(
                       padding: const EdgeInsets.all(16),
                       itemCount: historyOrders.length,
@@ -115,11 +116,11 @@ class _SupplierOrderHistoryScreenState extends State<SupplierOrderHistoryScreen>
     IconData statusIcon;
 
     if (status == 'delivered') {
-      statusColor = Colors.green;
+      statusColor = const Color(0xFF22C55E);
       statusText = 'Completed';
       statusIcon = Icons.check_circle;
     } else {
-      statusColor = Colors.red;
+      statusColor = const Color(0xFFEF4444);
       statusText = status == 'cancelled' ? 'Cancelled by User' : 'Rejected by You';
       statusIcon = Icons.cancel;
     }
@@ -147,14 +148,8 @@ class _SupplierOrderHistoryScreenState extends State<SupplierOrderHistoryScreen>
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.circular(16),
-          border: Border.all(color: Colors.grey.shade200),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withOpacity(0.02),
-              blurRadius: 8,
-              offset: const Offset(0, 2),
-            )
-          ],
+          border: Border.all(color: AppTheme.borderColor),
+          boxShadow: AppTheme.softShadow,
         ),
         padding: const EdgeInsets.all(16),
         child: Column(
@@ -187,10 +182,10 @@ class _SupplierOrderHistoryScreenState extends State<SupplierOrderHistoryScreen>
               ],
             ),
             const SizedBox(height: 8),
-            Text(dateStr, style: TextStyle(color: Colors.grey.shade500, fontSize: 12)),
+            Text(dateStr, style: TextStyle(color: AppTheme.textSecondary, fontSize: 12)),
             const Padding(
               padding: EdgeInsets.symmetric(vertical: 12),
-              child: Divider(height: 1, color: Color(0xFFE5E7EB)),
+              child: Divider(height: 1, color: AppTheme.borderColor),
             ),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -202,7 +197,7 @@ class _SupplierOrderHistoryScreenState extends State<SupplierOrderHistoryScreen>
                     children: [
                       TextSpan(
                         text: ' for ',
-                        style: TextStyle(fontWeight: FontWeight.normal, color: Colors.grey.shade500),
+                        style: TextStyle(fontWeight: FontWeight.normal, color: AppTheme.textSecondary),
                       ),
                       TextSpan(
                         text: '₹${earnings.toStringAsFixed(0)}',
@@ -210,7 +205,7 @@ class _SupplierOrderHistoryScreenState extends State<SupplierOrderHistoryScreen>
                     ],
                   ),
                 ),
-                const Icon(Icons.chevron_right, color: Colors.grey, size: 18),
+                const Icon(Icons.chevron_right, color: AppTheme.textHint, size: 18),
               ],
             )
           ],
