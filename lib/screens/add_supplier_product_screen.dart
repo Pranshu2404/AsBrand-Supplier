@@ -108,6 +108,7 @@ class _AddSupplierProductScreenState extends State<AddSupplierProductScreen> {
 
   // Track selected SKU for preview (selected color index)
   int _selectedColorIndex = 0;
+  bool _ignoreDuplicateWarning = false;
 
   final _genders = ['Men', 'Women', 'Kids', 'Unisex', 'Boys', 'Girls'];
 
@@ -345,6 +346,14 @@ class _AddSupplierProductScreenState extends State<AddSupplierProductScreen> {
       return;
     }
 
+    final hasVariantInput = _variantRows.any((r) => r.typeName.trim().isNotEmpty && r.values.isNotEmpty);
+    if (hasVariantInput && _skus.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Please click "Generate SKUs" before submitting')),
+      );
+      return;
+    }
+
     if (_uploadedImages.any((img) => img.isUploading)) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Please wait for images to finish uploading')),
@@ -408,17 +417,19 @@ class _AddSupplierProductScreenState extends State<AddSupplierProductScreen> {
       }
 
       // Late Duplicate detection (just in case)
-      final dupRes = await context.read<SupplierProvider>().checkDuplicate(
-        name: stringFields['name']!,
-        proCategoryId: stringFields['proCategoryId']!,
-      );
+      if (!_ignoreDuplicateWarning) {
+        final dupRes = await context.read<SupplierProvider>().checkDuplicate(
+          name: stringFields['name']!,
+          proCategoryId: stringFields['proCategoryId']!,
+        );
 
-      if (dupRes['success'] == true && dupRes['duplicate'] == true) {
-        final suggestions = dupRes['suggestions'] as List<dynamic>? ?? [];
-        if (suggestions.isNotEmpty && mounted) {
-           setState(() => _isSubmitting = false);
-           await _showDuplicateOptionsBottomSheet(suggestions);
-           return;
+        if (dupRes['success'] == true && dupRes['duplicate'] == true) {
+          final suggestions = dupRes['suggestions'] as List<dynamic>? ?? [];
+          if (suggestions.isNotEmpty && mounted) {
+             setState(() => _isSubmitting = false);
+             await _showDuplicateOptionsBottomSheet(suggestions);
+             return;
+          }
         }
       }
 
@@ -598,7 +609,10 @@ class _AddSupplierProductScreenState extends State<AddSupplierProductScreen> {
                 child: TextButton(
                   onPressed: () {
                     Navigator.pop(ctx);
-                    // Add as a completely new product: do nothing extra, just close modal
+                    setState(() {
+                      _ignoreDuplicateWarning = true;
+                    });
+                    _submit();
                   },
                   style: TextButton.styleFrom(
                     foregroundColor: Colors.grey.shade700,

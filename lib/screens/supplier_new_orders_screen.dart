@@ -38,7 +38,7 @@ class _SupplierNewOrdersScreenState
   @override
   void initState() {
     super.initState();
-    _tabController = TabController(length: 3, vsync: this);
+    _tabController = TabController(length: 4, vsync: this);
     WidgetsBinding.instance.addPostFrameCallback((_) {
       context.read<SupplierProvider>().fetchOrders();
       _listenForNewOrders();
@@ -78,7 +78,7 @@ class _SupplierNewOrdersScreenState
     _countdownTimer?.cancel();
     _countdownTimer = Timer.periodic(const Duration(seconds: 1), (timer) {
       if (_acceptCountdown <= 0) {
-        _rejectOrder(order.id); // Auto-reject order or mark missed
+        _autoRejectExpiredOrder(order.id); // Auto-reject expired order
         timer.cancel();
       } else {
         setState(() => _acceptCountdown--);
@@ -120,6 +120,19 @@ class _SupplierNewOrdersScreenState
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: Text('Order rejected.'),
+          backgroundColor: Color(0xFFEF4444),
+        ),
+      );
+    }
+  }
+
+  Future<void> _autoRejectExpiredOrder(String orderId) async {
+    _dismissPopup();
+    await context.read<SupplierProvider>().rejectOrder(orderId);
+    if (mounted) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Order auto-rejected — timer expired.'),
           backgroundColor: Color(0xFFEF4444),
         ),
       );
@@ -170,7 +183,8 @@ class _SupplierNewOrdersScreenState
 
     final preparing = supplier.preparingOrders;
     final ready = supplier.readyOrders;
-    final pickedUp = supplier.pickedUpOrders;
+    final inTransit = supplier.inTransitOrders;
+    final rejected = supplier.rejectedOrders;
     final newOrds = supplier.newOrders;
 
     return Stack(
@@ -221,7 +235,8 @@ class _SupplierNewOrdersScreenState
                   tabs: [
                     Tab(text: 'Preparing (${preparing.length})'),
                     Tab(text: 'Ready (${ready.length})'),
-                    Tab(text: 'Picked up (${pickedUp.length})'),
+                    Tab(text: 'In Transit (${inTransit.length})'),
+                    Tab(text: 'Rejected (${rejected.length})'),
                   ],
                 ),
               ),
@@ -268,7 +283,8 @@ class _SupplierNewOrdersScreenState
                         children: [
                           _buildOrderList(preparing, 'preparing'),
                           _buildOrderList(ready, 'ready'),
-                          _buildOrderList(pickedUp, 'picked_up'),
+                          _buildOrderList(inTransit, 'in_transit'),
+                          _buildOrderList(rejected, 'rejected'),
                         ],
                       ),
                     ),
@@ -289,24 +305,36 @@ class _SupplierNewOrdersScreenState
 
   Widget _buildOrderList(List<Order> orders, String tab) {
     if (orders.isEmpty) {
+      IconData emptyIcon;
+      String emptyText;
+      switch (tab) {
+        case 'preparing':
+          emptyIcon = Iconsax.timer;
+          emptyText = 'No orders being prepared';
+          break;
+        case 'ready':
+          emptyIcon = Iconsax.box_tick;
+          emptyText = 'No orders ready for pickup';
+          break;
+        case 'in_transit':
+          emptyIcon = Iconsax.truck_fast;
+          emptyText = 'No orders in transit';
+          break;
+        case 'rejected':
+          emptyIcon = Iconsax.close_circle;
+          emptyText = 'No rejected orders';
+          break;
+        default:
+          emptyIcon = Iconsax.box;
+          emptyText = 'No orders';
+      }
       return Center(
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Icon(
-              tab == 'preparing' ? Iconsax.timer : tab == 'ready' ? Iconsax.box_tick : Iconsax.truck_fast,
-              size: 56,
-              color: AppTheme.textHint,
-            ),
+            Icon(emptyIcon, size: 56, color: AppTheme.textHint),
             const SizedBox(height: 16),
-            Text(
-              tab == 'preparing'
-                  ? 'No orders being prepared'
-                  : tab == 'ready'
-                      ? 'No orders ready for pickup'
-                      : 'No picked up orders',
-              style: const TextStyle(color: AppTheme.textSecondary, fontSize: 15),
-            ),
+            Text(emptyText, style: const TextStyle(color: AppTheme.textSecondary, fontSize: 15)),
           ],
         ),
       );
@@ -519,23 +547,68 @@ class _SupplierNewOrdersScreenState
               ),
             ),
 
-          // Picked up info
-          if (tab == 'picked_up' && order.pickedUpAt != null)
+          // In-transit delivery status info
+          if (tab == 'in_transit') ...[
+            if (order.pickedUpAt != null)
+              Container(
+                margin: const EdgeInsets.fromLTRB(16, 0, 16, 4),
+                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                decoration: BoxDecoration(
+                  color: const Color(0xFFF5F3FF),
+                  borderRadius: BorderRadius.circular(8),
+                  border: Border.all(color: const Color(0xFFDDD6FE)),
+                ),
+                child: Row(
+                  children: [
+                    const Icon(Iconsax.truck_tick, size: 16, color: Color(0xFF8B5CF6)),
+                    const SizedBox(width: 8),
+                    Text(
+                      'Picked up at ${DateFormat('h:mm a').format(order.pickedUpAt!)}',
+                      style: const TextStyle(color: Color(0xFF8B5CF6), fontSize: 12, fontWeight: FontWeight.w600),
+                    ),
+                  ],
+                ),
+              ),
+            Container(
+              margin: const EdgeInsets.fromLTRB(16, 4, 16, 8),
+              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+              decoration: BoxDecoration(
+                color: const Color(0xFFFFF7ED),
+                borderRadius: BorderRadius.circular(8),
+                border: Border.all(color: const Color(0xFFFED7AA)),
+              ),
+              child: Row(
+                children: [
+                  const Icon(Iconsax.truck_fast, size: 16, color: Color(0xFFEA580C)),
+                  const SizedBox(width: 8),
+                  Expanded(
+                    child: Text(
+                      _getDeliveryStatusText(order.deliveryStatus),
+                      style: const TextStyle(color: Color(0xFFEA580C), fontSize: 12, fontWeight: FontWeight.w600),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+
+          // Rejected info
+          if (tab == 'rejected')
             Container(
               margin: const EdgeInsets.fromLTRB(16, 0, 16, 8),
               padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
               decoration: BoxDecoration(
-                color: const Color(0xFFF5F3FF),
+                color: const Color(0xFFFEF2F2),
                 borderRadius: BorderRadius.circular(8),
-                border: Border.all(color: const Color(0xFFDDD6FE)),
+                border: Border.all(color: const Color(0xFFFECACA)),
               ),
-              child: Row(
+              child: const Row(
                 children: [
-                  const Icon(Iconsax.truck_tick, size: 16, color: Color(0xFF8B5CF6)),
-                  const SizedBox(width: 8),
+                  Icon(Iconsax.close_circle, size: 16, color: Color(0xFFEF4444)),
+                  SizedBox(width: 8),
                   Text(
-                    'Picked up at ${DateFormat('h:mm a').format(order.pickedUpAt!)}',
-                    style: const TextStyle(color: Color(0xFF8B5CF6), fontSize: 12, fontWeight: FontWeight.w600),
+                    'Order was rejected or expired',
+                    style: TextStyle(color: Color(0xFFEF4444), fontSize: 12, fontWeight: FontWeight.w600),
                   ),
                 ],
               ),
@@ -789,6 +862,19 @@ class _SupplierNewOrdersScreenState
         ),
       ),
     );
+  }
+
+  String _getDeliveryStatusText(String? deliveryStatus) {
+    switch (deliveryStatus?.toUpperCase()) {
+      case 'PICKED_UP':
+        return 'Driver picked up — heading to customer';
+      case 'OUT_FOR_DELIVERY':
+        return 'Out for delivery — arriving soon';
+      case 'IN_TRANSIT':
+        return 'In transit to customer';
+      default:
+        return 'En route to customer';
+    }
   }
 
   Color _statusColor(String status) {

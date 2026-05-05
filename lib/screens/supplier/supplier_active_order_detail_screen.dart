@@ -113,6 +113,9 @@ class _SupplierActiveOrderDetailScreenState
     final total = _order.orderTotal?.total ?? _order.totalPrice;
     final isPreparing = _order.orderStatus == 'preparing';
     final isReady = _order.orderStatus == 'ready';
+    final isPickedUp = _order.orderStatus == 'picked_up' || _order.orderStatus == 'shipped';
+    final isDelivered = _order.orderStatus == 'delivered';
+    final isRejected = _order.orderStatus == 'rejected' || _order.orderStatus == 'cancelled';
 
     return Scaffold(
       backgroundColor: AppTheme.scaffoldBackground,
@@ -144,20 +147,54 @@ class _SupplierActiveOrderDetailScreenState
               child: Column(
                 children: [
                   Icon(
-                    isPreparing ? Iconsax.timer_1 : isReady ? Iconsax.box_tick : Iconsax.truck_fast,
+                    isPreparing ? Iconsax.timer_1
+                      : isReady ? Iconsax.box_tick
+                      : isPickedUp ? Iconsax.truck_fast
+                      : isDelivered ? Iconsax.tick_circle
+                      : isRejected ? Iconsax.close_circle
+                      : Iconsax.box,
                     size: 40,
                     color: _statusColor(_order.orderStatus),
                   ),
                   const SizedBox(height: 12),
                   Text(
-                    _order.orderStatus.toUpperCase(),
+                    isPickedUp ? 'IN TRANSIT' : _order.orderStatus.toUpperCase(),
                     style: TextStyle(fontSize: 18, fontWeight: FontWeight.w900, color: _statusColor(_order.orderStatus), letterSpacing: 1),
                   ),
                   const SizedBox(height: 4),
                   Text(
-                    isPreparing ? 'Prepare the items carefully.' : isReady ? 'Waiting for delivery partner' : 'Order picked up successfully',
+                    isPreparing ? 'Prepare the items carefully.'
+                      : isReady ? 'Waiting for delivery partner'
+                      : isPickedUp ? 'Driver is on the way to customer'
+                      : isDelivered ? 'Order delivered successfully!'
+                      : isRejected ? 'This order was rejected or cancelled'
+                      : 'Order picked up successfully',
                     style: const TextStyle(color: AppTheme.textSecondary, fontSize: 13),
+                    textAlign: TextAlign.center,
                   ),
+                  // Show delivery status for in-transit orders
+                  if (isPickedUp && _order.deliveryStatus != null) ...[
+                    const SizedBox(height: 10),
+                    Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                      decoration: BoxDecoration(
+                        color: const Color(0xFFFFF7ED),
+                        borderRadius: BorderRadius.circular(8),
+                        border: Border.all(color: const Color(0xFFFED7AA)),
+                      ),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          const Icon(Iconsax.truck_fast, size: 14, color: Color(0xFFEA580C)),
+                          const SizedBox(width: 6),
+                          Text(
+                            _getDeliveryStatusText(_order.deliveryStatus),
+                            style: const TextStyle(color: Color(0xFFEA580C), fontSize: 12, fontWeight: FontWeight.w600),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
                 ],
               ),
             ),
@@ -361,10 +398,73 @@ class _SupplierActiveOrderDetailScreenState
                     child: const Text('MARK PICKED UP', style: TextStyle(fontSize: 15, fontWeight: FontWeight.w800, letterSpacing: 1, color: Colors.white)),
                   ),
                 ),
+              if (isPickedUp)
+                Container(
+                  width: double.infinity,
+                  padding: const EdgeInsets.symmetric(vertical: 16),
+                  decoration: BoxDecoration(
+                    color: const Color(0xFFFFF7ED),
+                    borderRadius: BorderRadius.circular(12),
+                    border: Border.all(color: const Color(0xFFFED7AA)),
+                  ),
+                  child: const Center(
+                    child: Text(
+                      'Order is in transit to customer',
+                      style: TextStyle(color: Color(0xFFEA580C), fontSize: 14, fontWeight: FontWeight.w700),
+                    ),
+                  ),
+                ),
+              if (isDelivered)
+                Container(
+                  width: double.infinity,
+                  padding: const EdgeInsets.symmetric(vertical: 16),
+                  decoration: BoxDecoration(
+                    color: const Color(0xFFF0FDF4),
+                    borderRadius: BorderRadius.circular(12),
+                    border: Border.all(color: const Color(0xFFBBF7D0)),
+                  ),
+                  child: const Center(
+                    child: Text(
+                      '✓ Order delivered successfully',
+                      style: TextStyle(color: Color(0xFF22C55E), fontSize: 14, fontWeight: FontWeight.w700),
+                    ),
+                  ),
+                ),
+              if (isRejected)
+                Container(
+                  width: double.infinity,
+                  padding: const EdgeInsets.symmetric(vertical: 16),
+                  decoration: BoxDecoration(
+                    color: const Color(0xFFFEF2F2),
+                    borderRadius: BorderRadius.circular(12),
+                    border: Border.all(color: const Color(0xFFFECACA)),
+                  ),
+                  child: const Center(
+                    child: Text(
+                      'Order was rejected / cancelled',
+                      style: TextStyle(color: Color(0xFFEF4444), fontSize: 14, fontWeight: FontWeight.w700),
+                    ),
+                  ),
+                ),
             ],
           ),
         ),
       ),
     );
+  }
+
+  String _getDeliveryStatusText(String? deliveryStatus) {
+    switch (deliveryStatus?.toUpperCase()) {
+      case 'PICKED_UP':
+        return 'Driver picked up — heading to customer';
+      case 'OUT_FOR_DELIVERY':
+        return 'Out for delivery — arriving soon';
+      case 'IN_TRANSIT':
+        return 'In transit to customer';
+      case 'DELIVERED':
+        return 'Order has been delivered';
+      default:
+        return 'En route to customer';
+    }
   }
 }

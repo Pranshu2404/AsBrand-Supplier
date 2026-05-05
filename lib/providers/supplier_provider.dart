@@ -54,8 +54,12 @@ class SupplierProvider with ChangeNotifier {
   List<Order> get readyOrders =>
       _orders.where((o) => o.orderStatus == 'ready').toList();
 
-  List<Order> get pickedUpOrders =>
+  List<Order> get inTransitOrders =>
       _orders.where((o) => o.orderStatus == 'picked_up' || o.orderStatus == 'shipped').toList();
+
+  List<Order> get rejectedOrders =>
+      _orders.where((o) => o.orderStatus == 'rejected').toList();
+
 
   // ============================================================
   // Socket integration
