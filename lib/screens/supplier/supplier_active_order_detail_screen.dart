@@ -95,13 +95,83 @@ class _SupplierActiveOrderDetailScreenState
   }
 
   Future<void> _markPickedUp() async {
+    // Check if delivery partner is assigned
+    if (_order.assignedDriver == null) {
+      _showWarningDialog(
+        'Delivery Partner Not Assigned',
+        'A delivery partner has not been assigned to this order yet. Please wait for a driver to be assigned before marking as picked up.',
+        Iconsax.close_circle,
+      );
+      return;
+    }
+
+    // Check if delivery partner has reached pickup location
+    final deliveryStatus = _order.deliveryStatus?.toUpperCase() ?? '';
+    if (deliveryStatus != 'REACHED_PICKUP') {
+      _showWarningDialog(
+        'Driver Has Not Arrived',
+        'The delivery partner has not reached the pickup location yet. Please wait for the driver to arrive before handing over the order.',
+        Iconsax.location,
+      );
+      return;
+    }
+
     final success = await context.read<SupplierProvider>().markOrderPickedUp(_order.id);
     if (success && mounted) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Order picked up!'), backgroundColor: Color(0xFF8B5CF6)),
       );
-      Navigator.pop(context); // Go back after pick up? Or stay to see history
+      Navigator.pop(context);
     }
+  }
+
+  void _showWarningDialog(String title, String message, IconData icon) {
+    showDialog(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+        contentPadding: const EdgeInsets.all(24),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Container(
+              padding: const EdgeInsets.all(16),
+              decoration: BoxDecoration(
+                color: const Color(0xFFFEF3C7),
+                shape: BoxShape.circle,
+              ),
+              child: Icon(icon, color: const Color(0xFFF59E0B), size: 36),
+            ),
+            const SizedBox(height: 16),
+            Text(
+              title,
+              style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: AppTheme.textPrimary),
+              textAlign: TextAlign.center,
+            ),
+            const SizedBox(height: 10),
+            Text(
+              message,
+              style: const TextStyle(fontSize: 14, color: AppTheme.textSecondary, height: 1.5),
+              textAlign: TextAlign.center,
+            ),
+            const SizedBox(height: 20),
+            SizedBox(
+              width: double.infinity,
+              child: ElevatedButton(
+                onPressed: () => Navigator.pop(ctx),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: const Color(0xFFF59E0B),
+                  foregroundColor: Colors.white,
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                  padding: const EdgeInsets.symmetric(vertical: 14),
+                ),
+                child: const Text('OK, Got It', style: TextStyle(fontWeight: FontWeight.bold)),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
   }
 
   @override

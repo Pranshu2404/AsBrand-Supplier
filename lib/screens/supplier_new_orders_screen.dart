@@ -151,8 +151,29 @@ class _SupplierNewOrdersScreenState
     }
   }
 
-  Future<void> _markPickedUp(String orderId) async {
-    final success = await context.read<SupplierProvider>().markOrderPickedUp(orderId);
+  Future<void> _markPickedUp(Order order) async {
+    // Check if delivery partner is assigned
+    if (order.assignedDriver == null) {
+      _showWarningDialog(
+        'Delivery Partner Not Assigned',
+        'A delivery partner has not been assigned to this order yet. Please wait for a driver to be assigned before marking as picked up.',
+        Iconsax.close_circle,
+      );
+      return;
+    }
+
+    // Check if delivery partner has reached pickup location
+    final deliveryStatus = order.deliveryStatus?.toUpperCase() ?? '';
+    if (deliveryStatus != 'REACHED_PICKUP') {
+      _showWarningDialog(
+        'Driver Has Not Arrived',
+        'The delivery partner has not reached the pickup location yet. Please wait for the driver to arrive before handing over the order.',
+        Iconsax.location,
+      );
+      return;
+    }
+
+    final success = await context.read<SupplierProvider>().markOrderPickedUp(order.id);
     if (success && mounted) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
@@ -161,6 +182,55 @@ class _SupplierNewOrdersScreenState
         ),
       );
     }
+  }
+
+  void _showWarningDialog(String title, String message, IconData icon) {
+    showDialog(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+        contentPadding: const EdgeInsets.all(24),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Container(
+              padding: const EdgeInsets.all(16),
+              decoration: const BoxDecoration(
+                color: Color(0xFFFEF3C7),
+                shape: BoxShape.circle,
+              ),
+              child: Icon(icon, color: const Color(0xFFF59E0B), size: 36),
+            ),
+            const SizedBox(height: 16),
+            Text(
+              title,
+              style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: AppTheme.textPrimary),
+              textAlign: TextAlign.center,
+            ),
+            const SizedBox(height: 10),
+            Text(
+              message,
+              style: const TextStyle(fontSize: 14, color: AppTheme.textSecondary, height: 1.5),
+              textAlign: TextAlign.center,
+            ),
+            const SizedBox(height: 20),
+            SizedBox(
+              width: double.infinity,
+              child: ElevatedButton(
+                onPressed: () => Navigator.pop(ctx),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: const Color(0xFFF59E0B),
+                  foregroundColor: Colors.white,
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                  padding: const EdgeInsets.symmetric(vertical: 14),
+                ),
+                child: const Text('OK, Got It', style: TextStyle(fontWeight: FontWeight.bold)),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
   }
 
   String _formatCountdown(int seconds) {
@@ -641,7 +711,7 @@ class _SupplierNewOrdersScreenState
                 width: double.infinity,
                 height: 46,
                 child: ElevatedButton(
-                  onPressed: () => _markPickedUp(order.id),
+                  onPressed: () => _markPickedUp(order),
                   style: ElevatedButton.styleFrom(
                     backgroundColor: const Color(0xFF8B5CF6),
                     foregroundColor: Colors.white,
