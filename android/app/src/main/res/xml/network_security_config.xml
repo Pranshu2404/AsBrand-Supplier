@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<network-security-config>
+    <!-- Allow cleartext only to the backend server IP -->
+    <domain-config cleartextTrafficPermitted="true">
+        <domain includeSubdomains="false">52.70.7.244</domain>
+    </domain-config>
+    <!-- Block cleartext for everything else (secure by default) -->
+    <base-config cleartextTrafficPermitted="false" />
+</network-security-config>

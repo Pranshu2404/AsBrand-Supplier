@@ -1,4 +1,4 @@
-package com.example.asbrand_supplier
+package com.lunemart.supplier
 
 import io.flutter.embedding.android.FlutterActivity
 
