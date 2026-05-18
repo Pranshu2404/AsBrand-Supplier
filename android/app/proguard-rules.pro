@@ -1,4 +1,4 @@
-# Flutter Wrapper
+# --- FLUTTER ENGINE & PLUGINS ---
 -keep class io.flutter.app.** { *; }
 -keep class io.flutter.plugin.** { *; }
 -keep class io.flutter.util.** { *; }
@@ -28,3 +28,9 @@
 -keepclasseswithmembernames class * {
     native <methods>;
 }
+
+# --- R8 MISSING CLASS FIXES (ANDROID 14 / PLAY CORE) ---
+-dontwarn com.google.android.play.core.tasks.**
+-dontwarn com.google.android.play.core.splitinstall.**
+-dontwarn com.google.android.play.core.splitcompat.**
+-dontwarn com.google.android.play.core.**

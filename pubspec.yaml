@@ -39,6 +39,16 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_lints: ^6.0.0
+  flutter_launcher_icons:
 
 flutter:
   uses-material-design: true
+
+flutter_icons:
+  android: true
+  ios: true # Set to false if you don't want to generate iOS icons right now
+  image_path: "assets/logo.png" # Fallback for older Android versions
+  
+  # --- Android Adaptive Icon Settings ---
+  adaptive_icon_background: "#EEF3F8" # Replace with your desired background Hex color
+  adaptive_icon_foreground: "assets/logo.png" # Your transparent logo

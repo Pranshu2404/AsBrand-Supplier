@@ -15,7 +15,7 @@ if (keystorePropertiesFile.exists()) {
 }
 
 android {
-    namespace = "com.lunemart.supplier"
+    namespace = "com.lunemart.suppliers"
     compileSdk = flutter.compileSdkVersion
     ndkVersion = flutter.ndkVersion
 
@@ -29,7 +29,7 @@ android {
     }
 
     defaultConfig {
-        applicationId = "com.lunemart.supplier"
+        applicationId = "com.lunemart.suppliers"
         minSdk = flutter.minSdkVersion
         targetSdk = flutter.targetSdkVersion
         versionCode = flutter.versionCode
@@ -60,4 +60,9 @@ android {
 
 flutter {
     source = "../.."
+}
+// ADD THIS BLOCK AT THE VERY BOTTOM:
+dependencies {
+    // Provides the missing classes that R8 is looking for during the release build
+    implementation("com.google.android.play:feature-delivery:2.1.0")
 }
