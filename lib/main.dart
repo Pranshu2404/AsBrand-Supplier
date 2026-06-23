@@ -8,6 +8,7 @@ import 'providers/category_provider.dart';
 import 'providers/brand_provider.dart';
 import 'screens/supplier_login_screen.dart';
 import 'screens/supplier_shell.dart';
+import 'screens/become_supplier_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -72,8 +73,13 @@ class _AppRootState extends State<_AppRoot> {
 
     final auth = context.watch<AuthProvider>();
 
-    if (!auth.isAuthenticated || !auth.isSupplier) {
+    if (!auth.isAuthenticated) {
       return const SupplierLoginScreen();
+    }
+
+    if (!auth.isSupplier) {
+      // Authenticated but not yet a supplier → show supplier registration
+      return const BecomeSupplierScreen();
     }
 
     // Authenticated supplier → main shell with bottom nav

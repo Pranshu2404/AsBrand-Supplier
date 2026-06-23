@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:iconsax_flutter/iconsax_flutter.dart';
 import '../core/theme.dart';
 import '../providers/auth_provider.dart';
+import 'auth/register_screen.dart';
 
 class SupplierLoginScreen extends StatefulWidget {
   const SupplierLoginScreen({super.key});
@@ -70,14 +71,10 @@ class _SupplierLoginScreenState extends State<SupplierLoginScreen>
 
       if (!mounted) return;
 
-      if (success) {
-        if (!auth.isSupplier) {
-          await auth.logout();
-          _showError('Access denied. This app is for suppliers only.');
-        }
-      } else {
+      if (!success) {
         _showError('Invalid email or password');
       }
+      // If success, auth state change will trigger routing in main.dart
     } catch (e) {
       if (mounted) _showError(e.toString().replaceAll('Exception:', '').trim());
     } finally {
@@ -139,15 +136,10 @@ class _SupplierLoginScreenState extends State<SupplierLoginScreen>
 
       if (!mounted) return;
 
-      if (success) {
-        if (!auth.isSupplier) {
-          await auth.logout();
-          _showError('Access denied. This app is for suppliers only.');
-        }
-        // If supplier, the auth state change will redirect automatically
-      } else {
+      if (!success) {
         _showError('Invalid OTP. Please try again.');
       }
+      // If success, auth state change will trigger routing in main.dart
     } catch (e) {
       if (mounted) _showError(e.toString().replaceAll('Exception:', '').trim());
     } finally {
@@ -290,6 +282,37 @@ class _SupplierLoginScreenState extends State<SupplierLoginScreen>
                           ),
                         ),
                       ],
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 28),
+
+                // Register link
+                Center(
+                  child: GestureDetector(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (_) => const RegisterScreen()),
+                      );
+                    },
+                    child: RichText(
+                      text: TextSpan(
+                        text: "Don't have an account? ",
+                        style: TextStyle(
+                          fontSize: 14,
+                          color: AppTheme.textSecondary,
+                        ),
+                        children: const [
+                          TextSpan(
+                            text: 'Register',
+                            style: TextStyle(
+                              color: AppTheme.primaryAccent,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                 ),
