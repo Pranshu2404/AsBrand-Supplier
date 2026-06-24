@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:iconsax_flutter/iconsax_flutter.dart';
 import '../../core/theme.dart';
 import '../../providers/auth_provider.dart';
+import '../supplier_login_screen.dart';
 
 class RegisterScreen extends StatefulWidget {
   const RegisterScreen({super.key});
@@ -68,11 +69,16 @@ class _RegisterScreenState extends State<RegisterScreen>
       if (resultPhone != null && mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: const Text('Registration Successful! Please Login.'),
+            content: const Text('Account created! Verify OTP to login.'),
             backgroundColor: AppTheme.successGreen,
           ),
         );
-        Navigator.pop(context);
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+            builder: (_) => SupplierLoginScreen(prefillPhone: resultPhone),
+          ),
+        );
       }
     } catch (e) {
       if (mounted) {

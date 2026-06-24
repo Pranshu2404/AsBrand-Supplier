@@ -7,7 +7,8 @@ import '../providers/auth_provider.dart';
 import 'auth/register_screen.dart';
 
 class SupplierLoginScreen extends StatefulWidget {
-  const SupplierLoginScreen({super.key});
+  final String? prefillPhone;
+  const SupplierLoginScreen({super.key, this.prefillPhone});
 
   @override
   State<SupplierLoginScreen> createState() => _SupplierLoginScreenState();
@@ -43,6 +44,12 @@ class _SupplierLoginScreenState extends State<SupplierLoginScreen>
     _animController = AnimationController(vsync: this, duration: const Duration(milliseconds: 800));
     _fadeAnim = CurvedAnimation(parent: _animController, curve: Curves.easeOut);
     _animController.forward();
+    
+    if (widget.prefillPhone != null && widget.prefillPhone!.isNotEmpty) {
+      _loginMode = 0;
+      _phoneController.text = widget.prefillPhone!;
+      _otpSent = true;
+    }
   }
 
   @override
