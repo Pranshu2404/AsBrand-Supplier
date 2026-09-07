@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 
 void main(List<String> args) async {
-  final url = Uri.parse('http://52.70.7.244:3000/supplier/products');
+  final url = Uri.parse('http://54.85.43.50:3000/supplier/products');
   final body = {
     "name": "Dart Real World Product",
     "description": "testing",
